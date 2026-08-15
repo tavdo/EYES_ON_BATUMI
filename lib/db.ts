@@ -16,17 +16,18 @@ function createTurso() {
   return createClient({ url, authToken });
 }
 
-export const turso = globalForTurso.turso ?? createTurso();
-
-if (process.env.NODE_ENV !== "production") {
-  globalForTurso.turso = turso;
+export function getTurso() {
+  if (!globalForTurso.turso) {
+    globalForTurso.turso = createTurso();
+  }
+  return globalForTurso.turso;
 }
 
 let schemaReady: Promise<void> | null = null;
 
 export function ensureSchema() {
   if (!schemaReady) {
-    schemaReady = turso
+    schemaReady = getTurso()
       .batch(
         [
           `CREATE TABLE IF NOT EXISTS photos (

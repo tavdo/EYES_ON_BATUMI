@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { ensureSchema, turso } from "./db";
+import { ensureSchema, getTurso } from "./db";
 
 export type Photo = {
   id: string;
@@ -54,7 +54,7 @@ export function isPhotoAccessible(photo: Photo) {
 
 export async function getPhotoById(id: string) {
   await ensureSchema();
-  const result = await turso.execute({
+  const result = await getTurso().execute({
     sql: `SELECT id, original_filename, mime_type, original_path, thumb_path,
                  caption, created_at, expires_at, active, view_count
           FROM photos WHERE id = ?`,
@@ -67,7 +67,7 @@ export async function getPhotoById(id: string) {
 
 export async function listActivePhotos() {
   await ensureSchema();
-  const result = await turso.execute(
+  const result = await getTurso().execute(
     `SELECT id, original_filename, mime_type, original_path, thumb_path,
             caption, created_at, expires_at, active, view_count
      FROM photos
@@ -90,7 +90,7 @@ export async function insertPhoto(input: {
   await ensureSchema();
   const createdAt = Date.now();
 
-  await turso.execute({
+  await getTurso().execute({
     sql: `INSERT INTO photos (
             id, original_filename, mime_type, original_path, thumb_path,
             caption, created_at, expires_at, active, view_count
@@ -112,7 +112,7 @@ export async function insertPhoto(input: {
 
 export async function incrementViewCount(id: string) {
   await ensureSchema();
-  await turso.execute({
+  await getTurso().execute({
     sql: "UPDATE photos SET view_count = view_count + 1 WHERE id = ?",
     args: [id],
   });
@@ -120,7 +120,7 @@ export async function incrementViewCount(id: string) {
 
 export async function deactivatePhoto(id: string) {
   await ensureSchema();
-  const result = await turso.execute({
+  const result = await getTurso().execute({
     sql: "UPDATE photos SET active = 0 WHERE id = ? AND active = 1",
     args: [id],
   });
