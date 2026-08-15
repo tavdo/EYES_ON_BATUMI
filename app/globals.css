@@ -16,6 +16,7 @@
 
 html {
   background: var(--navy);
+  scroll-behavior: smooth;
 }
 
 body {
@@ -29,9 +30,50 @@ body {
   color: var(--navy);
 }
 
-input[type="password"],
-input[type="text"] {
+input,
+select,
+textarea {
   font-family: inherit;
+}
+
+.field {
+  height: 3rem;
+  border-radius: 999px;
+  border: 1px solid rgba(244, 237, 226, 0.2);
+  background: transparent;
+  padding: 0 1.25rem;
+  color: var(--cream);
+  outline: none;
+}
+
+.field:focus {
+  border-color: var(--terracotta);
+}
+
+select.field {
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, #f4ede2 50%),
+    linear-gradient(135deg, #f4ede2 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) 22px,
+    calc(100% - 13px) 22px;
+  background-size: 5px 5px;
+  background-repeat: no-repeat;
+}
+
+.field option {
+  color: #16202a;
+}
+
+input[type="date"].field {
+  color-scheme: dark;
+}
+
+textarea.field {
+  height: auto;
+  border-radius: 1.5rem;
+  padding-top: 0.85rem;
+  padding-bottom: 0.85rem;
 }
 
 .scene {

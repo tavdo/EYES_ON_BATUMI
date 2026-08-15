@@ -60,6 +60,25 @@ async function migrate() {
   await db.execute(
     "CREATE INDEX IF NOT EXISTS idx_photos_public ON photos (is_public, active)",
   );
+
+  await db.batch(
+    [
+      `CREATE TABLE IF NOT EXISTS bookings (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        phone TEXT NOT NULL,
+        instagram TEXT,
+        preferred_date TEXT NOT NULL,
+        time_of_day TEXT NOT NULL,
+        message TEXT,
+        status TEXT NOT NULL DEFAULT 'new',
+        created_at INTEGER NOT NULL
+      )`,
+      `CREATE INDEX IF NOT EXISTS idx_bookings_created_at ON bookings (created_at DESC)`,
+      `CREATE INDEX IF NOT EXISTS idx_bookings_status ON bookings (status)`,
+    ],
+    "write",
+  );
 }
 
 export function ensureSchema() {

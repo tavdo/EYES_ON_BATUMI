@@ -2,10 +2,13 @@
 
 import { useMemo, useRef, useState } from "react";
 import { uploadPhotoToBlob } from "@/lib/client-upload";
+import type { Booking } from "@/lib/bookings";
 import type { Photo } from "@/lib/photos";
+import { BookingsPanel } from "./bookings-panel";
 
 type Props = {
   initialPhotos: Photo[];
+  initialBookings: Booking[];
   useBlob: boolean;
   onVercel: boolean;
 };
@@ -18,7 +21,7 @@ function formatDate(timestamp: number) {
   }).format(new Date(timestamp));
 }
 
-export function AdminDashboard({ initialPhotos, useBlob, onVercel }: Props) {
+export function AdminDashboard({ initialPhotos, initialBookings, useBlob, onVercel }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [photos, setPhotos] = useState(initialPhotos);
   const [caption, setCaption] = useState("");
@@ -189,6 +192,8 @@ export function AdminDashboard({ initialPhotos, useBlob, onVercel }: Props) {
           </button>
         </form>
       </header>
+
+      <BookingsPanel initialBookings={initialBookings} />
 
       <section className="mb-14">
         <h2 className="mb-5 text-sm tracking-wide text-cream/80">ახალი ფოტოს ატვირთვა</h2>

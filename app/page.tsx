@@ -1,4 +1,7 @@
 import Link from "next/link";
+import { BookingForm } from "@/components/BookingForm";
+import { ContactLinks } from "@/components/ContactLinks";
+import { WHATSAPP_URL } from "@/lib/contact";
 import { listPublicPhotos, type Photo } from "@/lib/photos";
 import { INSTAGRAM_URL, TIKTOK_URL } from "@/lib/social";
 
@@ -25,14 +28,28 @@ export default async function HomePage() {
           ქუჩის პორტრეტები ბათუმში
         </p>
         <div className="reveal reveal-delay-3 mt-14 flex flex-wrap items-center justify-center gap-4">
+          <a
+            href="#book"
+            className="rounded-full bg-terracotta px-5 py-2.5 text-sm font-medium text-navy transition-opacity hover:opacity-90"
+          >
+            დაჯავშნე
+          </a>
           {photos.length > 0 ? (
             <a
               href="#gallery"
-              className="rounded-full bg-terracotta px-5 py-2.5 text-sm font-medium text-navy transition-opacity hover:opacity-90"
+              className="rounded-full border border-cream/20 px-5 py-2.5 text-sm text-cream/80 transition-all hover:border-terracotta hover:text-terracotta"
             >
               გალერეა
             </a>
           ) : null}
+          <Link
+            href={WHATSAPP_URL}
+            className="rounded-full border border-cream/20 px-5 py-2.5 text-sm text-cream/80 transition-all hover:border-terracotta hover:text-terracotta"
+            target="_blank"
+            rel="noreferrer"
+          >
+            WhatsApp
+          </Link>
           <Link
             href={INSTAGRAM_URL}
             className="rounded-full border border-cream/20 px-5 py-2.5 text-sm text-cream/80 transition-all hover:border-terracotta hover:text-terracotta"
@@ -81,6 +98,15 @@ export default async function HomePage() {
           </ul>
         </section>
       ) : null}
+
+      <section id="book" className="mx-auto w-full max-w-xl scroll-mt-24 px-5 pb-20 sm:px-8">
+        <h2 className="mb-3 text-center font-serif text-2xl">დაჯავშნე გადაღება</h2>
+        <p className="mx-auto mb-8 max-w-sm text-center text-sm leading-relaxed text-cream/65">
+          ქუჩის პორტრეტი ბათუმში. დაწერე როდის გინდა და მალე დაგიკავშირდებით.
+        </p>
+        <BookingForm />
+        <ContactLinks />
+      </section>
     </main>
   );
 }
