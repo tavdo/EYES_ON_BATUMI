@@ -23,6 +23,8 @@ export function AdminDashboard({ initialPhotos, useBlob, onVercel }: Props) {
   const [photos, setPhotos] = useState(initialPhotos);
   const [caption, setCaption] = useState("");
   const [expire, setExpire] = useState(true);
+  const [makePublic, setMakePublic] = useState(false);
+  const [publishingId, setPublishingId] = useState<string | null>(null);
   const [dragging, setDragging] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState("");
@@ -60,22 +62,24 @@ export function AdminDashboard({ initialPhotos, useBlob, onVercel }: Props) {
                 mimeType: file.type,
                 caption: caption.trim() || null,
                 expire,
+                isPublic: makePublic,
               }),
             });
             const data = (await response.json()) as { photo?: Photo; error?: string };
             if (!response.ok || !data.photo) {
-              errors.push(`${file.name}: ${data.error ?? "ატვირთვა ვერ მოხერხდა"}`);
+              errors.push(file.name);
               continue;
             }
             uploaded.push(data.photo);
           } catch {
-            errors.push(`${file.name}: ატვირთვა ვერ მოხერხდა`);
+            errors.push(file.name);
           }
         }
 
         if (uploaded.length) {
           setPhotos((current) => [...uploaded, ...current]);
           setCaption("");
+          setMakePublic(false);
         }
         if (errors.length) setMessage(errors.join(" · "));
         return;
@@ -85,6 +89,7 @@ export function AdminDashboard({ initialPhotos, useBlob, onVercel }: Props) {
       for (const file of files) formData.append("files", file);
       if (caption.trim()) formData.append("caption", caption.trim());
       formData.append("expire", expire ? "1" : "0");
+      formData.append("isPublic", makePublic ? "1" : "0");
 
       const response = await fetch("/api/admin/upload", {
         method: "POST",
@@ -97,22 +102,21 @@ export function AdminDashboard({ initialPhotos, useBlob, onVercel }: Props) {
       };
 
       if (!response.ok) {
-        setMessage(data.error ?? "ატვირთვა ვერ მოხერხდა");
+        setMessage(data.error ?? "upload failed");
         return;
       }
 
       if (data.photos?.length) {
         setPhotos((current) => [...(data.photos ?? []), ...current]);
         setCaption("");
+        setMakePublic(false);
       }
 
       if (data.errors?.length) {
-        setMessage(
-          data.errors.map((item) => `${item.filename}: ${item.error}`).join(" · "),
-        );
+        setMessage(data.errors.map((item) => item.filename).join(" · "));
       }
     } catch {
-      setMessage("ატვირთვა ვერ მოხერხდა");
+      setMessage("upload failed");
     } finally {
       setUploading(false);
       if (inputRef.current) inputRef.current.value = "";
@@ -126,22 +130,47 @@ export function AdminDashboard({ initialPhotos, useBlob, onVercel }: Props) {
       setCopiedId(id);
       window.setTimeout(() => setCopiedId((current) => (current === id ? null : current)), 1600);
     } catch {
-      window.prompt("ბმული:", url);
+      window.prompt("link:", url);
+    }
+  }
+
+  async function togglePublic(photo: Photo) {
+    const next = photo.is_public !== 1;
+    setPublishingId(photo.id);
+    try {
+      const response = await fetch(`/api/admin/photos/${photo.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isPublic: next }),
+      });
+      if (!response.ok) {
+        setMessage("gallery update failed");
+        return;
+      }
+      setPhotos((current) =>
+        current.map((item) =>
+          item.id === photo.id ? { ...item, is_public: next ? 1 : 0 } : item,
+        ),
+      );
+    } catch {
+      setMessage("gallery update failed");
+    } finally {
+      setPublishingId(null);
     }
   }
 
   async function removePhoto(id: string) {
-    if (!window.confirm("ბმული გაითიშება. გაგრძელება?")) return;
+    if (!window.confirm("Deactivate this link?")) return;
     setDeletingId(id);
     try {
       const response = await fetch(`/api/admin/photos/${id}`, { method: "DELETE" });
       if (!response.ok) {
-        setMessage("წაშლა ვერ მოხერხდა");
+        setMessage("delete failed");
         return;
       }
       setPhotos((current) => current.filter((photo) => photo.id !== id));
     } catch {
-      setMessage("წაშლა ვერ მოხერხდა");
+      setMessage("delete failed");
     } finally {
       setDeletingId(null);
     }
@@ -155,10 +184,7 @@ export function AdminDashboard({ initialPhotos, useBlob, onVercel }: Props) {
           <h1 className="mt-3 font-serif text-2xl">ადმინი</h1>
         </div>
         <form action="/api/admin/logout" method="post">
-          <button
-            type="submit"
-            className="text-sm text-cream/60 transition-colors hover:text-cream"
-          >
+          <button type="submit" className="text-sm text-cream/60 transition-colors hover:text-cream">
             გასვლა
           </button>
         </form>
@@ -168,7 +194,7 @@ export function AdminDashboard({ initialPhotos, useBlob, onVercel }: Props) {
         <h2 className="mb-5 text-sm tracking-wide text-cream/80">ახალი ფოტოს ატვირთვა</h2>
         {onVercel && !useBlob ? (
           <p className="mb-4 text-sm text-terracotta">
-            Vercel Blob არ არის დაკავშირებული. Storage → Create Database → Blob (Private).
+            Vercel Blob is not connected.
           </p>
         ) : null}
 
@@ -209,7 +235,7 @@ export function AdminDashboard({ initialPhotos, useBlob, onVercel }: Props) {
           <span className="text-sm text-cream/80">
             {uploading ? "იტვირთება..." : "ჩააგდე ფოტოები ან შეეხე ასარჩევად"}
           </span>
-          <span className="mt-2 text-xs text-cream/45">JPEG, PNG, WebP, HEIC · მაქს. 50MB</span>
+          <span className="mt-2 text-xs text-cream/45">JPEG, PNG, WebP, HEIC · max 50MB</span>
         </label>
 
         <div className="mt-5 flex flex-col gap-4 sm:flex-row sm:items-center">
@@ -217,7 +243,7 @@ export function AdminDashboard({ initialPhotos, useBlob, onVercel }: Props) {
             type="text"
             value={caption}
             onChange={(event) => setCaption(event.target.value)}
-            placeholder="მოკლე წარწერა (არასავალდებულო)"
+            placeholder="Short caption (optional)"
             maxLength={280}
             className="h-11 flex-1 rounded-full border border-cream/20 bg-transparent px-5 text-sm outline-none transition-colors placeholder:text-cream/35 focus:border-terracotta"
           />
@@ -229,6 +255,15 @@ export function AdminDashboard({ initialPhotos, useBlob, onVercel }: Props) {
               className="size-4 accent-terracotta"
             />
             30 დღეში გაითიშოს
+          </label>
+          <label className="flex items-center gap-2 text-sm text-cream/70">
+            <input
+              type="checkbox"
+              checked={makePublic}
+              onChange={(event) => setMakePublic(event.target.checked)}
+              className="size-4 accent-terracotta"
+            />
+            გალერეაში გამოჩნდეს
           </label>
         </div>
 
@@ -242,14 +277,11 @@ export function AdminDashboard({ initialPhotos, useBlob, onVercel }: Props) {
         </div>
 
         {photos.length === 0 ? (
-          <p className="text-sm text-cream/50">სია ცარიელია.</p>
+          <p className="text-sm text-cream/50">The list is empty.</p>
         ) : (
           <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {photos.map((photo) => (
-              <li
-                key={photo.id}
-                className="overflow-hidden rounded-2xl border border-cream/10"
-              >
+              <li key={photo.id} className="overflow-hidden rounded-2xl border border-cream/10">
                 <div className="aspect-[4/5] bg-black/20">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
@@ -261,33 +293,46 @@ export function AdminDashboard({ initialPhotos, useBlob, onVercel }: Props) {
                 <div className="flex flex-col gap-3 p-4">
                   <div className="flex items-start justify-between gap-3 text-xs text-cream/55">
                     <span>{formatDate(photo.created_at)}</span>
-                    <span>{photo.view_count} ნახვა</span>
+                    <span>{photo.view_count} views</span>
                   </div>
+                  <p className="text-xs text-cream/45">
+                    {photo.is_public === 1 ? "გალერეაშია" : "პირადი ბმული"}
+                  </p>
                   {photo.caption ? (
                     <p className="line-clamp-2 text-sm text-cream/80">{photo.caption}</p>
                   ) : null}
                   {photo.expires_at ? (
                     <p className="text-xs text-cream/40">
                       {photo.expires_at <= Date.now()
-                        ? "ვადაგასულია"
-                        : `ვადა: ${formatDate(photo.expires_at)}`}
+                        ? "Expired"
+                        : `Until ${formatDate(photo.expires_at)}`}
                     </p>
                   ) : null}
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => void copyLink(photo.id)}
+                        className="h-10 flex-1 rounded-full bg-terracotta text-sm font-medium text-navy transition-opacity hover:opacity-90"
+                      >
+                        {copiedId === photo.id ? "კოპირებულია" : "ბმულის კოპირება"}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => void removePhoto(photo.id)}
+                        disabled={deletingId === photo.id}
+                        className="h-10 rounded-full border border-cream/20 px-4 text-sm text-cream/70 transition-colors hover:border-terracotta hover:text-terracotta disabled:opacity-50"
+                      >
+                        წაშლა
+                      </button>
+                    </div>
                     <button
                       type="button"
-                      onClick={() => void copyLink(photo.id)}
-                      className="h-10 flex-1 rounded-full bg-terracotta text-sm font-medium text-navy transition-opacity hover:opacity-90"
+                      onClick={() => void togglePublic(photo)}
+                      disabled={publishingId === photo.id}
+                      className="h-10 rounded-full border border-cream/20 text-sm text-cream/80 transition-colors hover:border-terracotta hover:text-terracotta disabled:opacity-50"
                     >
-                      {copiedId === photo.id ? "კოპირებულია" : "ბმულის კოპირება"}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => void removePhoto(photo.id)}
-                      disabled={deletingId === photo.id}
-                      className="h-10 rounded-full border border-cream/20 px-4 text-sm text-cream/70 transition-colors hover:border-terracotta hover:text-terracotta disabled:opacity-50"
-                    >
-                      წაშლა
+                      {photo.is_public === 1 ? "გალერეიდან მოხსნა" : "გალერეაში დამატება"}
                     </button>
                   </div>
                 </div>

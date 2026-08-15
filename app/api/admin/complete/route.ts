@@ -22,6 +22,7 @@ export async function POST(request: Request) {
     mimeType?: string;
     caption?: string | null;
     expire?: boolean;
+    isPublic?: boolean;
   };
 
   try {
@@ -72,6 +73,7 @@ export async function POST(request: Request) {
     thumbPath: thumbUrl,
     caption,
     expiresAt: body.expire === false ? null : Date.now() + THIRTY_DAYS_MS,
+    isPublic: body.isPublic === true,
   });
 
   return NextResponse.json({ photo });

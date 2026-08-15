@@ -40,14 +40,24 @@ export function ensureSchema() {
             created_at INTEGER NOT NULL,
             expires_at INTEGER,
             active INTEGER NOT NULL DEFAULT 1,
-            view_count INTEGER NOT NULL DEFAULT 0
+            view_count INTEGER NOT NULL DEFAULT 0,
+            is_public INTEGER NOT NULL DEFAULT 0
           )`,
           `CREATE INDEX IF NOT EXISTS idx_photos_created_at ON photos (created_at DESC)`,
           `CREATE INDEX IF NOT EXISTS idx_photos_active ON photos (active)`,
+          `CREATE INDEX IF NOT EXISTS idx_photos_public ON photos (is_public, active)`,
         ],
         "write",
       )
-      .then(() => undefined);
+      .then(async () => {
+        const info = await getTurso().execute("PRAGMA table_info(photos)");
+        const hasPublic = info.rows.some((row) => String(row.name) === "is_public");
+        if (!hasPublic) {
+          await getTurso().execute(
+            "ALTER TABLE photos ADD COLUMN is_public INTEGER NOT NULL DEFAULT 0",
+          );
+        }
+      });
   }
 
   return schemaReady;

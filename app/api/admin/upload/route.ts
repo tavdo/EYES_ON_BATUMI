@@ -41,6 +41,7 @@ export async function POST(request: Request) {
 
   const expire = formData.get("expire") !== "0";
   const expiresAt = expire ? Date.now() + THIRTY_DAYS_MS : null;
+  const isPublic = formData.get("isPublic") === "1";
 
   const photos = [];
   const errors: { filename: string; error: string }[] = [];
@@ -73,6 +74,7 @@ export async function POST(request: Request) {
         thumbPath: stored.thumbPath,
         caption,
         expiresAt,
+        isPublic,
       });
 
       if (photo) photos.push(photo);

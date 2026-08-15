@@ -12,20 +12,13 @@ export type Photo = {
   expires_at: number | null;
   active: number;
   view_count: number;
+  is_public: number;
 };
 
-type PhotoRow = {
-  id: string;
-  original_filename: string;
-  mime_type: string;
-  original_path: string;
-  thumb_path: string;
-  caption: string | null;
-  created_at: number;
-  expires_at: number | null;
-  active: number;
-  view_count: number;
-};
+type PhotoRow = Photo;
+
+const PHOTO_COLUMNS = `id, original_filename, mime_type, original_path, thumb_path,
+  caption, created_at, expires_at, active, view_count, is_public`;
 
 function mapPhoto(row: PhotoRow): Photo {
   return {
@@ -39,6 +32,7 @@ function mapPhoto(row: PhotoRow): Photo {
     expires_at: row.expires_at == null ? null : Number(row.expires_at),
     active: Number(row.active),
     view_count: Number(row.view_count),
+    is_public: Number(row.is_public ?? 0),
   };
 }
 
@@ -55,9 +49,7 @@ export function isPhotoAccessible(photo: Photo) {
 export async function getPhotoById(id: string) {
   await ensureSchema();
   const result = await getTurso().execute({
-    sql: `SELECT id, original_filename, mime_type, original_path, thumb_path,
-                 caption, created_at, expires_at, active, view_count
-          FROM photos WHERE id = ?`,
+    sql: `SELECT ${PHOTO_COLUMNS} FROM photos WHERE id = ?`,
     args: [id],
   });
 
@@ -68,12 +60,24 @@ export async function getPhotoById(id: string) {
 export async function listActivePhotos() {
   await ensureSchema();
   const result = await getTurso().execute(
-    `SELECT id, original_filename, mime_type, original_path, thumb_path,
-            caption, created_at, expires_at, active, view_count
-     FROM photos
-     WHERE active = 1
-     ORDER BY created_at DESC`,
+    `SELECT ${PHOTO_COLUMNS} FROM photos WHERE active = 1 ORDER BY created_at DESC`,
   );
+
+  return (result.rows as unknown as PhotoRow[]).map(mapPhoto);
+}
+
+export async function listPublicPhotos() {
+  await ensureSchema();
+  const now = Date.now();
+  const result = await getTurso().execute({
+    sql: `SELECT ${PHOTO_COLUMNS}
+          FROM photos
+          WHERE active = 1
+            AND is_public = 1
+            AND (expires_at IS NULL OR expires_at > ?)
+          ORDER BY created_at DESC`,
+    args: [now],
+  });
 
   return (result.rows as unknown as PhotoRow[]).map(mapPhoto);
 }
@@ -86,6 +90,7 @@ export async function insertPhoto(input: {
   thumbPath: string;
   caption: string | null;
   expiresAt: number | null;
+  isPublic?: boolean;
 }) {
   await ensureSchema();
   const createdAt = Date.now();
@@ -93,8 +98,8 @@ export async function insertPhoto(input: {
   await getTurso().execute({
     sql: `INSERT INTO photos (
             id, original_filename, mime_type, original_path, thumb_path,
-            caption, created_at, expires_at, active, view_count
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1, 0)`,
+            caption, created_at, expires_at, active, view_count, is_public
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1, 0, ?)`,
     args: [
       input.id,
       input.originalFilename,
@@ -104,6 +109,7 @@ export async function insertPhoto(input: {
       input.caption,
       createdAt,
       input.expiresAt,
+      input.isPublic ? 1 : 0,
     ],
   });
 
@@ -118,10 +124,19 @@ export async function incrementViewCount(id: string) {
   });
 }
 
+export async function setPhotoPublic(id: string, isPublic: boolean) {
+  await ensureSchema();
+  const result = await getTurso().execute({
+    sql: "UPDATE photos SET is_public = ? WHERE id = ? AND active = 1",
+    args: [isPublic ? 1 : 0, id],
+  });
+  return result.rowsAffected > 0;
+}
+
 export async function deactivatePhoto(id: string) {
   await ensureSchema();
   const result = await getTurso().execute({
-    sql: "UPDATE photos SET active = 0 WHERE id = ? AND active = 1",
+    sql: "UPDATE photos SET active = 0, is_public = 0 WHERE id = ? AND active = 1",
     args: [id],
   });
   return result.rowsAffected > 0;
