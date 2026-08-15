@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Noto_Sans_Georgian, Noto_Serif_Georgian } from "next/font/google";
+import { SceneBackground } from "@/components/SceneBackground";
 import "./globals.css";
 
 const notoSans = Noto_Sans_Georgian({
@@ -32,7 +33,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="ka"
       className={`${notoSans.variable} ${notoSerif.variable} h-full antialiased`}
     >
-      <body className="min-h-full bg-navy text-cream">{children}</body>
+      <body className="relative min-h-full bg-navy text-cream">
+        <SceneBackground />
+        <div className="relative z-10">{children}</div>
+      </body>
     </html>
   );
 }

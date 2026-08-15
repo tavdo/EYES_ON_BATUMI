@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getPhotoById, incrementViewCount, isPhotoAccessible } from "@/lib/photos";
+import { INSTAGRAM_URL, SOCIAL_HANDLE } from "@/lib/social";
 
 export const dynamic = "force-dynamic";
 
@@ -18,10 +19,10 @@ export async function generateMetadata(): Promise<Metadata> {
 function InvalidLink() {
   return (
     <main className="flex min-h-dvh flex-col items-center justify-center px-6 py-16">
-      <p className="mb-12 text-[11px] tracking-[0.28em] text-cream/55">
+      <p className="reveal mb-12 text-[11px] tracking-[0.28em] text-cream/55">
         eyes.on.batumi
       </p>
-      <p className="max-w-sm text-center font-serif text-xl leading-relaxed text-cream/90">
+      <p className="reveal reveal-delay max-w-sm text-center font-serif text-xl leading-relaxed text-cream/90">
         ეს ბმული არასწორია ან ვადაგასულია
       </p>
     </main>
@@ -43,43 +44,47 @@ export default async function PhotoPage({ params }: PageProps) {
       <header className="mb-12 text-center">
         <Link
           href="/"
-          className="text-[11px] tracking-[0.28em] text-cream/55 transition-colors hover:text-cream"
+          className="reveal text-[11px] tracking-[0.28em] text-cream/55 transition-colors hover:text-cream"
         >
           eyes.on.batumi
         </Link>
-        <h1 className="mt-8 font-serif text-[1.65rem] leading-snug tracking-wide sm:text-3xl">
+        <h1 className="reveal reveal-delay mt-8 font-serif text-[1.65rem] leading-snug tracking-wide sm:text-3xl">
           თქვენი კადრი ბათუმის ქუჩებიდან
         </h1>
         {photo.caption ? (
-          <p className="mt-4 text-sm leading-relaxed text-cream/70">{photo.caption}</p>
+          <p className="reveal reveal-delay-2 mt-4 text-sm leading-relaxed text-cream/70">
+            {photo.caption}
+          </p>
         ) : null}
       </header>
 
-      <div className="flex flex-1 flex-col items-center">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={`/api/photos/${photo.id}/preview`}
-          alt="თქვენი კადრი ბათუმის ქუჩებიდან"
-          className="max-h-[72dvh] w-full object-contain"
-        />
+      <div className="reveal reveal-delay-2 flex flex-1 flex-col items-center">
+        <div className="photo-plate w-full">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={`/api/photos/${photo.id}/preview`}
+            alt="თქვენი კადრი ბათუმის ქუჩებიდან"
+            className="max-h-[72dvh] w-full object-contain"
+          />
+        </div>
 
         <a
           href={`/api/photos/${photo.id}/download`}
-          className="mt-10 inline-flex min-h-12 w-full max-w-sm items-center justify-center rounded-full bg-terracotta px-6 text-center text-[15px] font-medium text-navy transition-opacity hover:opacity-90 active:opacity-80"
+          className="btn-lift mt-10 inline-flex min-h-12 w-full max-w-sm items-center justify-center rounded-full bg-terracotta px-6 text-center text-[15px] font-medium text-navy"
         >
           ჩამოტვირთე მაღალი ხარისხით
         </a>
       </div>
 
-      <footer className="mt-16 pb-4 text-center text-[13px] leading-relaxed text-cream/55">
+      <footer className="reveal reveal-delay-3 mt-16 pb-4 text-center text-[13px] leading-relaxed text-cream/55">
         გადაღებულია{" "}
         <Link
-          href="https://instagram.com/eyes.on.batumi"
+          href={INSTAGRAM_URL}
           className="text-cream/80 underline decoration-cream/25 underline-offset-4 hover:text-terracotta"
           target="_blank"
           rel="noreferrer"
         >
-          @eyes.on.batumi
+          {SOCIAL_HANDLE}
         </Link>
         -ს მიერ. თუ გააზიარებ, მონიშნე ჩვენი ექაუნთი 🙏
       </footer>
