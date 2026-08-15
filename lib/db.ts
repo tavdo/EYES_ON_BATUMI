@@ -25,39 +25,49 @@ export function getTurso() {
 
 let schemaReady: Promise<void> | null = null;
 
+async function migrate() {
+  const db = getTurso();
+
+  await db.batch(
+    [
+      `CREATE TABLE IF NOT EXISTS photos (
+        id TEXT PRIMARY KEY,
+        original_filename TEXT NOT NULL,
+        mime_type TEXT NOT NULL,
+        original_path TEXT NOT NULL,
+        thumb_path TEXT NOT NULL,
+        caption TEXT,
+        created_at INTEGER NOT NULL,
+        expires_at INTEGER,
+        active INTEGER NOT NULL DEFAULT 1,
+        view_count INTEGER NOT NULL DEFAULT 0
+      )`,
+      `CREATE INDEX IF NOT EXISTS idx_photos_created_at ON photos (created_at DESC)`,
+      `CREATE INDEX IF NOT EXISTS idx_photos_active ON photos (active)`,
+    ],
+    "write",
+  );
+
+  const info = await db.execute("PRAGMA table_info(photos)");
+  const columns = new Set(info.rows.map((row) => String(row.name)));
+
+  if (!columns.has("is_public")) {
+    await db.execute(
+      "ALTER TABLE photos ADD COLUMN is_public INTEGER NOT NULL DEFAULT 0",
+    );
+  }
+
+  await db.execute(
+    "CREATE INDEX IF NOT EXISTS idx_photos_public ON photos (is_public, active)",
+  );
+}
+
 export function ensureSchema() {
   if (!schemaReady) {
-    schemaReady = getTurso()
-      .batch(
-        [
-          `CREATE TABLE IF NOT EXISTS photos (
-            id TEXT PRIMARY KEY,
-            original_filename TEXT NOT NULL,
-            mime_type TEXT NOT NULL,
-            original_path TEXT NOT NULL,
-            thumb_path TEXT NOT NULL,
-            caption TEXT,
-            created_at INTEGER NOT NULL,
-            expires_at INTEGER,
-            active INTEGER NOT NULL DEFAULT 1,
-            view_count INTEGER NOT NULL DEFAULT 0,
-            is_public INTEGER NOT NULL DEFAULT 0
-          )`,
-          `CREATE INDEX IF NOT EXISTS idx_photos_created_at ON photos (created_at DESC)`,
-          `CREATE INDEX IF NOT EXISTS idx_photos_active ON photos (active)`,
-          `CREATE INDEX IF NOT EXISTS idx_photos_public ON photos (is_public, active)`,
-        ],
-        "write",
-      )
-      .then(async () => {
-        const info = await getTurso().execute("PRAGMA table_info(photos)");
-        const hasPublic = info.rows.some((row) => String(row.name) === "is_public");
-        if (!hasPublic) {
-          await getTurso().execute(
-            "ALTER TABLE photos ADD COLUMN is_public INTEGER NOT NULL DEFAULT 0",
-          );
-        }
-      });
+    schemaReady = migrate().catch((error) => {
+      schemaReady = null;
+      throw error;
+    });
   }
 
   return schemaReady;
