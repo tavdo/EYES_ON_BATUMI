@@ -1,14 +1,21 @@
 import { handleUpload, type HandleUploadBody } from "@vercel/blob/client";
 import { NextResponse } from "next/server";
 import { isAdminAuthenticated } from "@/lib/auth";
+import { getBlobToken } from "@/lib/blob-env";
 
 export async function POST(request: Request) {
+  const token = getBlobToken();
+  if (!token) {
+    return NextResponse.json({ error: "Blob token არ არის" }, { status: 500 });
+  }
+
   const body = (await request.json()) as HandleUploadBody;
 
   try {
     const json = await handleUpload({
       body,
       request,
+      token,
       onBeforeGenerateToken: async (pathname) => {
         if (!(await isAdminAuthenticated())) {
           throw new Error("შესვლა საჭიროა");

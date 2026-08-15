@@ -5,6 +5,7 @@ import path from "path";
 import { Readable } from "stream";
 import { del, get, put } from "@vercel/blob";
 import sharp from "sharp";
+import { blobAuth, isBlobStorageEnabled } from "./blob-env";
 
 const UPLOAD_ROOT = path.join(process.cwd(), "data", "uploads");
 
@@ -41,9 +42,7 @@ export function isVercelBlobUrl(value: string) {
   }
 }
 
-export function isBlobStorageEnabled() {
-  return Boolean(process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID);
-}
+export { isBlobStorageEnabled } from "./blob-env";
 
 export function toAbsolutePath(relativePath: string) {
   const parts = relativePath.split("/").filter((part) => part && part !== "..");
@@ -74,12 +73,14 @@ export async function saveOriginalAndThumb(id: string, file: File) {
       addRandomSuffix: false,
       allowOverwrite: true,
       contentType: mimeType,
+      ...blobAuth(),
     });
     const thumb = await put(`photos/${id}/thumb.jpg`, thumbBuffer ?? buffer, {
       access: "private",
       addRandomSuffix: false,
       allowOverwrite: true,
       contentType: thumbBuffer ? "image/jpeg" : mimeType,
+      ...blobAuth(),
     });
 
     return {
@@ -111,7 +112,7 @@ export async function saveOriginalAndThumb(id: string, file: File) {
 
 export async function openStoredFile(storedPath: string) {
   if (isRemoteStoredPath(storedPath)) {
-    const result = await get(storedPath, { access: "private" });
+    const result = await get(storedPath, { access: "private", ...blobAuth() });
     if (!result || result.statusCode !== 200) {
       throw new Error("missing");
     }
@@ -140,7 +141,7 @@ export async function deleteStoredFiles(paths: string[]) {
 
   if (remote.length > 0) {
     try {
-      await del(remote);
+      await del(remote, blobAuth());
     } catch {
       // Link is still deactivated even if blob cleanup fails.
     }

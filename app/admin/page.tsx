@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { isAdminAuthenticated } from "@/lib/auth";
+import { isBlobStorageEnabled } from "@/lib/blob-env";
 import { listActivePhotos } from "@/lib/photos";
 import { AdminDashboard } from "./dashboard";
 
@@ -15,7 +16,7 @@ export default async function AdminPage() {
   return (
     <AdminDashboard
       initialPhotos={photos}
-      useBlob={Boolean(process.env.BLOB_READ_WRITE_TOKEN)}
+      useBlob={isBlobStorageEnabled()}
       onVercel={Boolean(process.env.VERCEL)}
     />
   );
