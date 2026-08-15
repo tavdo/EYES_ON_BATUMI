@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+:root {
+  --navy: #16202a;
+  --cream: #f4ede2;
+  --terracotta: #d97b4f;
+}
+
+@theme inline {
+  --color-navy: var(--navy);
+  --color-cream: var(--cream);
+  --color-terracotta: var(--terracotta);
+  --font-sans: var(--font-noto-sans);
+  --font-serif: var(--font-noto-serif);
+}
+
+html {
+  background: var(--navy);
+}
+
+body {
+  background: var(--navy);
+  color: var(--cream);
+  font-family: var(--font-noto-sans), sans-serif;
+}
+
+::selection {
+  background: var(--terracotta);
+  color: var(--navy);
+}
+
+input[type="password"],
+input[type="text"] {
+  font-family: inherit;
+}
