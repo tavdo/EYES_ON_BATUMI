@@ -255,14 +255,37 @@ input[type="text"] {
 }
 
 @media (max-width: 640px) {
-  .scene-frame-c,
-  .scene-frame-d {
+  .scene-stage {
+    inset: 0;
+  }
+
+  .scene-frame-a {
+    width: 28vw;
+    height: 36vw;
+    left: -2%;
+    top: 4%;
     opacity: 0.55;
   }
 
-  .scene-frame-a,
   .scene-frame-b {
-    opacity: 0.82;
+    width: 26vw;
+    height: 34vw;
+    right: -2%;
+    top: 7%;
+    opacity: 0.55;
+  }
+
+  .scene-frame-c,
+  .scene-frame-d {
+    display: none;
+  }
+
+  .scene-frame::after {
+    background: linear-gradient(160deg, rgba(22, 32, 42, 0.28), rgba(22, 32, 42, 0.55));
+  }
+
+  .scene-vignette {
+    background: radial-gradient(ellipse at center, rgba(16, 24, 32, 0.35) 28%, rgba(10, 14, 18, 0.72) 100%);
   }
 }
 
