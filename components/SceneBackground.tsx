@@ -9,7 +9,23 @@ const IMAGES = [
   "/scene/frame-d.png",
 ] as const;
 
-const FRAMES = [
+type SceneFrame = {
+  src: (typeof IMAGES)[number];
+  left: string;
+  right?: string;
+  top: string;
+  w: string;
+  h: string;
+  z: number;
+  ry: number;
+  rx: number;
+  s: number;
+  d: number;
+  reverse?: boolean;
+  keep?: boolean;
+};
+
+const FRAMES: SceneFrame[] = [
   { src: IMAGES[0], left: "2%", top: "6%", w: "13%", h: "22%", z: -80, ry: 18, rx: 6, s: 14, d: 0, keep: true },
   { src: IMAGES[2], left: "18%", top: "2%", w: "16%", h: "14%", z: -140, ry: 8, rx: 12, s: 20, d: -4 },
   { src: IMAGES[1], left: "auto", right: "4%", top: "8%", w: "12%", h: "20%", z: 40, ry: -22, rx: -4, s: 16, d: -2, reverse: true, keep: true },
@@ -26,7 +42,7 @@ const FRAMES = [
   { src: IMAGES[0], left: "64%", top: "44%", w: "10%", h: "17%", z: -30, ry: 12, rx: -6, s: 16, d: -11 },
   { src: IMAGES[2], left: "42%", top: "8%", w: "13%", h: "11%", z: -90, ry: -8, rx: 9, s: 18, d: -3 },
   { src: IMAGES[1], left: "86%", top: "50%", w: "10%", h: "16%", z: 30, ry: -20, rx: 5, s: 15, d: -7, reverse: true },
-] as const;
+];
 
 export function SceneBackground() {
   const stageRef = useRef<HTMLDivElement>(null);
@@ -59,7 +75,7 @@ export function SceneBackground() {
           <div
             key={index}
             className={`scene-frame${frame.reverse ? " scene-frame-reverse" : ""}${
-              "keep" in frame && frame.keep
+              frame.keep
                 ? index === 0
                   ? " scene-frame-keep scene-frame-keep-tl"
                   : " scene-frame-keep scene-frame-keep-tr"
@@ -67,7 +83,7 @@ export function SceneBackground() {
             }`}
             style={{
               left: frame.left === "auto" ? "auto" : frame.left,
-              right: "right" in frame ? frame.right : "auto",
+              right: frame.right ?? "auto",
               top: frame.top,
               width: frame.w,
               height: frame.h,
