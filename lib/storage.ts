@@ -3,7 +3,7 @@ import { createReadStream } from "fs";
 import { stat } from "fs/promises";
 import path from "path";
 import { Readable } from "stream";
-import { del, get } from "@vercel/blob";
+import { del, get, put } from "@vercel/blob";
 import sharp from "sharp";
 
 const UPLOAD_ROOT = path.join(process.cwd(), "data", "uploads");
@@ -42,7 +42,7 @@ export function isVercelBlobUrl(value: string) {
 }
 
 export function isBlobStorageEnabled() {
-  return Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+  return Boolean(process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID);
 }
 
 export function toAbsolutePath(relativePath: string) {
@@ -50,10 +50,44 @@ export function toAbsolutePath(relativePath: string) {
   return path.join(UPLOAD_ROOT, ...parts);
 }
 
+async function makeThumbBuffer(buffer: Buffer) {
+  try {
+    return await sharp(buffer)
+      .rotate()
+      .resize(1400, 1400, { fit: "inside", withoutEnlargement: true })
+      .jpeg({ quality: 82, progressive: true })
+      .toBuffer();
+  } catch {
+    return null;
+  }
+}
+
 export async function saveOriginalAndThumb(id: string, file: File) {
   const mimeType = file.type || "application/octet-stream";
   const ext = extensionForMime(mimeType);
   const buffer = Buffer.from(await file.arrayBuffer());
+  const thumbBuffer = await makeThumbBuffer(buffer);
+
+  if (isBlobStorageEnabled()) {
+    const original = await put(`photos/${id}/original.${ext}`, buffer, {
+      access: "private",
+      addRandomSuffix: false,
+      allowOverwrite: true,
+      contentType: mimeType,
+    });
+    const thumb = await put(`photos/${id}/thumb.jpg`, thumbBuffer ?? buffer, {
+      access: "private",
+      addRandomSuffix: false,
+      allowOverwrite: true,
+      contentType: thumbBuffer ? "image/jpeg" : mimeType,
+    });
+
+    return {
+      originalPath: original.url,
+      thumbPath: thumb.url,
+      mimeType,
+    };
+  }
 
   const originalRel = `${id}/original.${ext}`;
   const thumbRel = `${id}/thumb.jpg`;
@@ -62,13 +96,9 @@ export async function saveOriginalAndThumb(id: string, file: File) {
   await writeFile(toAbsolutePath(originalRel), buffer);
 
   let thumbPath = thumbRel;
-  try {
-    await sharp(buffer)
-      .rotate()
-      .resize(1400, 1400, { fit: "inside", withoutEnlargement: true })
-      .jpeg({ quality: 82, progressive: true })
-      .toFile(toAbsolutePath(thumbRel));
-  } catch {
+  if (thumbBuffer) {
+    await writeFile(toAbsolutePath(thumbRel), thumbBuffer);
+  } else {
     thumbPath = originalRel;
   }
 
