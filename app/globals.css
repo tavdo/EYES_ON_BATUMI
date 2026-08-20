@@ -79,10 +79,11 @@ textarea.field {
 .scene {
   position: fixed;
   inset: 0;
-  z-index: 0;
+  z-index: -1;
   overflow: hidden;
   pointer-events: none;
   perspective: 1100px;
+  isolation: isolate;
 }
 
 .scene-wash {
@@ -272,27 +273,27 @@ textarea.field {
 
   .scene-frame-keep {
     display: block;
-    opacity: 0.5;
+    opacity: 0.35;
   }
 
   .scene-frame-keep-tl {
-    width: 28vw;
-    height: 36vw;
-    left: -2% !important;
+    width: 24vw;
+    height: 30vw;
+    left: -4% !important;
     right: auto !important;
-    top: 4% !important;
+    top: 2% !important;
   }
 
   .scene-frame-keep-tr {
-    width: 26vw;
-    height: 34vw;
+    width: 22vw;
+    height: 28vw;
     left: auto !important;
-    right: -2% !important;
-    top: 7% !important;
+    right: -4% !important;
+    top: 4% !important;
   }
 
   .scene-frame::after {
-    background: linear-gradient(160deg, rgba(22, 32, 42, 0.28), rgba(22, 32, 42, 0.55));
+    background: linear-gradient(160deg, rgba(22, 32, 42, 0.4), rgba(22, 32, 42, 0.7));
   }
 
   .scene-vignette {

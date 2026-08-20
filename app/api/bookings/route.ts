@@ -58,18 +58,25 @@ export async function POST(request: Request) {
       timeOfDay,
       message,
     });
-    await trackEvent("booking_submit");
-    void notifyNewBooking({
-      name,
-      phone,
-      instagram,
-      preferredDate,
-      timeOfDay,
-      message,
-    });
-  } catch {
+  } catch (error) {
+    console.error("booking create failed", error);
     return NextResponse.json({ error: "გაგზავნა ვერ მოხერხდა" }, { status: 500 });
   }
+
+  try {
+    await trackEvent("booking_submit");
+  } catch (error) {
+    console.error("booking analytics failed", error);
+  }
+
+  void notifyNewBooking({
+    name,
+    phone,
+    instagram,
+    preferredDate,
+    timeOfDay,
+    message,
+  });
 
   return NextResponse.json({ ok: true });
 }

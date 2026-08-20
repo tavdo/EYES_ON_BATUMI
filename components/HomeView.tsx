@@ -197,13 +197,15 @@ export function HomeView({ locale, dict, photos, seasonPhotos }: Props) {
         </section>
       ) : null}
 
-      <section id="book" className="mx-auto w-full max-w-xl scroll-mt-24 px-5 pb-20 sm:px-8">
-        <h2 className="mb-3 text-center font-serif text-2xl">{dict.bookTitle}</h2>
-        <p className="mx-auto mb-8 max-w-sm text-center text-sm leading-relaxed text-cream/65">
-          {dict.bookBlurb}
-        </p>
-        <BookingForm dict={dict} />
-        <ContactLinks label={dict.contactDirect} telegramLabel={dict.telegram} />
+      <section id="book" className="relative z-20 mx-auto w-full max-w-xl scroll-mt-24 px-5 pb-20 sm:px-8">
+        <div className="rounded-[2rem] border border-cream/10 bg-navy/90 px-5 py-8 backdrop-blur-md sm:px-8 sm:py-10">
+          <h2 className="mb-3 text-center font-serif text-2xl">{dict.bookTitle}</h2>
+          <p className="mx-auto mb-8 max-w-sm text-center text-sm leading-relaxed text-cream/65">
+            {dict.bookBlurb}
+          </p>
+          <BookingForm dict={dict} />
+          <ContactLinks label={dict.contactDirect} telegramLabel={dict.telegram} />
+        </div>
       </section>
     </main>
   );
