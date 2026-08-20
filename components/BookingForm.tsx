@@ -84,7 +84,7 @@ export function BookingForm({ dict }: Props) {
         aria-hidden
       />
 
-      <label className="flex flex-col gap-2 text-sm text-navy/70">
+      <label className="flex flex-col gap-2 text-sm font-medium text-navy/90">
         {dict.formName}
         <input
           required
@@ -94,7 +94,7 @@ export function BookingForm({ dict }: Props) {
         />
       </label>
 
-      <label className="flex flex-col gap-2 text-sm text-navy/70">
+      <label className="flex flex-col gap-2 text-sm font-medium text-navy/90">
         {dict.formPhone}
         <input
           required
@@ -107,7 +107,7 @@ export function BookingForm({ dict }: Props) {
         />
       </label>
 
-      <label className="flex flex-col gap-2 text-sm text-navy/70">
+      <label className="flex flex-col gap-2 text-sm font-medium text-navy/90">
         {dict.formInstagram}
         <input
           value={instagram}
@@ -118,7 +118,7 @@ export function BookingForm({ dict }: Props) {
       </label>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <label className="flex flex-col gap-2 text-sm text-navy/70">
+        <label className="flex flex-col gap-2 text-sm font-medium text-navy/90">
           {dict.formDate}
           <input
             required
@@ -129,7 +129,7 @@ export function BookingForm({ dict }: Props) {
             className="field"
           />
         </label>
-        <label className="flex flex-col gap-2 text-sm text-navy/70">
+        <label className="flex flex-col gap-2 text-sm font-medium text-navy/90">
           {dict.formTime}
           <select
             value={timeOfDay}
@@ -145,7 +145,7 @@ export function BookingForm({ dict }: Props) {
         </label>
       </div>
 
-      <label className="flex flex-col gap-2 text-sm text-navy/70">
+      <label className="flex flex-col gap-2 text-sm font-medium text-navy/90">
         {dict.formMessage}
         <textarea
           value={message}

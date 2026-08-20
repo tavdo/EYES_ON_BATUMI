@@ -27,82 +27,85 @@ export function HomeView({ locale, dict, photos, seasonPhotos }: Props) {
       <LanguageSwitcher locale={locale} />
 
       <section className="flex min-h-dvh flex-col items-center justify-center px-6 py-16">
-        <p className="reveal mb-10 text-[11px] tracking-[0.32em] text-navy/60">
-          {dict.tagline}
-        </p>
-        <h1 className="reveal reveal-delay text-center text-4xl font-medium tracking-[0.1em] sm:text-5xl">
-          eyes.on.batumi
-        </h1>
-        <p className="reveal reveal-delay-2 mt-6 max-w-xs text-center font-serif text-lg leading-relaxed text-navy/75">
-          {dict.heroSubtitle}
-        </p>
-        <div className="reveal reveal-delay-3 mt-14 flex flex-wrap items-center justify-center gap-4">
-          <a
-            href="#book"
-            className="rounded-full bg-terracotta px-5 py-2.5 text-sm font-medium text-navy transition-opacity hover:opacity-90"
-          >
-            {dict.book}
-          </a>
-          {photos.length > 0 ? (
+        <div className="relative z-10 flex max-w-xl flex-col items-center text-center">
+          <p className="text-glow reveal mb-10 text-[11px] font-medium tracking-[0.32em] text-navy/80">
+            {dict.tagline}
+          </p>
+          <h1 className="text-glow reveal reveal-delay text-center text-4xl font-semibold tracking-[0.1em] text-navy sm:text-5xl">
+            eyes.on.batumi
+          </h1>
+          <p className="text-glow reveal reveal-delay-2 mt-6 max-w-xs text-center font-serif text-lg leading-relaxed text-navy">
+            {dict.heroSubtitle}
+          </p>
+          <div className="reveal reveal-delay-3 mt-14 flex flex-wrap items-center justify-center gap-3">
             <a
-              href="#gallery"
-              className="rounded-full border border-navy/20 px-5 py-2.5 text-sm text-navy/75 transition-all hover:border-terracotta hover:text-terracotta"
+              href="#book"
+              className="rounded-full bg-terracotta px-5 py-2.5 text-sm font-semibold text-navy transition-opacity hover:opacity-90"
             >
-              {dict.gallery}
+              {dict.book}
             </a>
-          ) : null}
-          <Link
-            href={TELEGRAM_BOT_URL}
-            className="rounded-full border border-navy/20 px-5 py-2.5 text-sm text-navy/75 transition-all hover:border-terracotta hover:text-terracotta"
-            target="_blank"
-            rel="noreferrer"
-          >
-            {dict.telegram}
-          </Link>
-          <Link
-            href={WHATSAPP_URL}
-            className="rounded-full border border-navy/20 px-5 py-2.5 text-sm text-navy/75 transition-all hover:border-terracotta hover:text-terracotta"
-            target="_blank"
-            rel="noreferrer"
-          >
-            {dict.whatsapp}
-          </Link>
-          <Link
-            href={INSTAGRAM_URL}
-            className="rounded-full border border-navy/20 px-5 py-2.5 text-sm text-navy/75 transition-all hover:border-terracotta hover:text-terracotta"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Instagram
-          </Link>
-          <Link
-            href={TIKTOK_URL}
-            className="rounded-full border border-navy/20 px-5 py-2.5 text-sm text-navy/75 transition-all hover:border-terracotta hover:text-terracotta"
-            target="_blank"
-            rel="noreferrer"
-          >
-            TikTok
-          </Link>
+            {photos.length > 0 ? (
+              <a
+                href="#gallery"
+                className="rounded-full border border-navy/25 bg-white/85 px-5 py-2.5 text-sm font-medium text-navy shadow-sm backdrop-blur-sm transition-all hover:border-terracotta hover:text-terracotta"
+              >
+                {dict.gallery}
+              </a>
+            ) : null}
+            <Link
+              href={TELEGRAM_BOT_URL}
+              className="rounded-full border border-navy/25 bg-white/85 px-5 py-2.5 text-sm font-medium text-navy shadow-sm backdrop-blur-sm transition-all hover:border-terracotta hover:text-terracotta"
+              target="_blank"
+              rel="noreferrer"
+            >
+              {dict.telegram}
+            </Link>
+            <Link
+              href={WHATSAPP_URL}
+              className="rounded-full border border-navy/25 bg-white/85 px-5 py-2.5 text-sm font-medium text-navy shadow-sm backdrop-blur-sm transition-all hover:border-terracotta hover:text-terracotta"
+              target="_blank"
+              rel="noreferrer"
+            >
+              {dict.whatsapp}
+            </Link>
+            <Link
+              href={INSTAGRAM_URL}
+              className="rounded-full border border-navy/25 bg-white/85 px-5 py-2.5 text-sm font-medium text-navy shadow-sm backdrop-blur-sm transition-all hover:border-terracotta hover:text-terracotta"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Instagram
+            </Link>
+            <Link
+              href={TIKTOK_URL}
+              className="rounded-full border border-navy/25 bg-white/85 px-5 py-2.5 text-sm font-medium text-navy shadow-sm backdrop-blur-sm transition-all hover:border-terracotta hover:text-terracotta"
+              target="_blank"
+              rel="noreferrer"
+            >
+              TikTok
+            </Link>
+          </div>
         </div>
       </section>
 
-      <section className="mx-auto w-full max-w-4xl px-5 pb-16 sm:px-8">
-        <h2 className="mb-8 text-center font-serif text-2xl">{dict.howItWorksTitle}</h2>
+      <section className="relative z-10 mx-auto w-full max-w-4xl px-5 pb-16 sm:px-8">
+        <h2 className="text-glow mb-8 text-center font-serif text-2xl font-semibold text-navy">
+          {dict.howItWorksTitle}
+        </h2>
         <ol className="grid gap-4 sm:grid-cols-3">
           {HOW_IT_WORKS.map((step, index) => (
-            <li
-              key={step.titleKa}
-              className="rounded-2xl border border-navy/10 px-5 py-6"
-            >
-              <p className="mb-2 text-xs tracking-wide text-terracotta">0{index + 1}</p>
-              <p className="font-medium">
+            <li key={step.titleKa} className="surface rounded-2xl px-5 py-6">
+              <p className="mb-2 text-xs font-medium tracking-wide text-terracotta">
+                0{index + 1}
+              </p>
+              <p className="font-semibold text-navy">
                 {localizedField(locale, {
                   ka: step.titleKa,
                   en: step.titleEn,
                   ru: step.titleRu,
                 })}
               </p>
-              <p className="mt-3 text-sm leading-relaxed text-navy/60">
+              <p className="mt-3 text-sm leading-relaxed text-navy/80">
                 {localizedField(locale, {
                   ka: step.bodyKa,
                   en: step.bodyEn,
@@ -114,29 +117,38 @@ export function HomeView({ locale, dict, photos, seasonPhotos }: Props) {
         </ol>
       </section>
 
-      <section className="mx-auto w-full max-w-xl px-5 pb-16 text-center sm:px-8">
-        <h2 className="mb-4 font-serif text-2xl">{dict.pricingTitle}</h2>
-        <p className="font-serif text-4xl text-terracotta">{getPricingLine(locale)}</p>
-        <p className="mt-4 text-sm leading-relaxed text-navy/60">{dict.pricingNote}</p>
-        <h3 className="mt-10 mb-4 text-xs tracking-wide text-navy/40">{dict.locationsTitle}</h3>
-        <div className="flex flex-wrap justify-center gap-2">
-          {LOCATIONS[locale].map((place) => (
-            <span
-              key={place}
-              className="rounded-full border border-navy/15 px-4 py-2 text-xs text-navy/65"
-            >
-              {place}
-            </span>
-          ))}
+      <section className="relative z-10 mx-auto w-full max-w-xl px-5 pb-16 text-center sm:px-8">
+        <div className="surface rounded-[2rem] px-6 py-8">
+          <h2 className="mb-4 font-serif text-2xl font-semibold text-navy">{dict.pricingTitle}</h2>
+          <p className="font-serif text-4xl font-medium text-terracotta">{getPricingLine(locale)}</p>
+          <p className="mt-4 text-sm leading-relaxed text-navy/80">{dict.pricingNote}</p>
+          <h3 className="mt-10 mb-4 text-xs font-medium tracking-wide text-navy/70">
+            {dict.locationsTitle}
+          </h3>
+          <div className="flex flex-wrap justify-center gap-2">
+            {LOCATIONS[locale].map((place) => (
+              <span
+                key={place}
+                className="rounded-full border border-navy/20 bg-white/90 px-4 py-2 text-xs font-medium text-navy"
+              >
+                {place}
+              </span>
+            ))}
+          </div>
         </div>
       </section>
 
       {seasonPhotos.length > 0 ? (
-        <section id="season" className="mx-auto w-full max-w-5xl px-5 pb-16 sm:px-8">
+        <section id="season" className="relative z-10 mx-auto w-full max-w-5xl px-5 pb-16 sm:px-8">
           <div className="mb-8 flex items-end justify-between gap-4">
-            <h2 className="font-serif text-2xl">{dict.seasonalTitle}</h2>
+            <h2 className="text-glow font-serif text-2xl font-semibold text-navy">
+              {dict.seasonalTitle}
+            </h2>
             {photos.length > seasonPhotos.length ? (
-              <a href="#gallery" className="text-sm text-navy/55 hover:text-terracotta">
+              <a
+                href="#gallery"
+                className="rounded-full bg-white/85 px-3 py-1 text-sm font-medium text-navy shadow-sm hover:text-terracotta"
+              >
                 {dict.seasonalMore} →
               </a>
             ) : null}
@@ -146,7 +158,7 @@ export function HomeView({ locale, dict, photos, seasonPhotos }: Props) {
               <li key={photo.id}>
                 <Link
                   href={`/p/${photo.id}`}
-                  className="group block overflow-hidden rounded-2xl border border-navy/10 bg-black/20"
+                  className="group block overflow-hidden rounded-2xl border border-navy/15 bg-white shadow-sm"
                 >
                   <div className="aspect-[4/5]">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -163,15 +175,14 @@ export function HomeView({ locale, dict, photos, seasonPhotos }: Props) {
         </section>
       ) : null}
 
-      <section className="mx-auto w-full max-w-4xl px-5 pb-16 sm:px-8">
-        <h2 className="mb-8 text-center font-serif text-2xl">{dict.testimonialsTitle}</h2>
+      <section className="relative z-10 mx-auto w-full max-w-4xl px-5 pb-16 sm:px-8">
+        <h2 className="text-glow mb-8 text-center font-serif text-2xl font-semibold text-navy">
+          {dict.testimonialsTitle}
+        </h2>
         <ul className="grid gap-4 sm:grid-cols-3">
           {TESTIMONIALS.map((item) => (
-            <li
-              key={item.author}
-              className="rounded-2xl border border-navy/10 px-5 py-6"
-            >
-              <p className="text-sm leading-relaxed text-navy/70">
+            <li key={item.author} className="surface rounded-2xl px-5 py-6">
+              <p className="text-sm leading-relaxed text-navy/90">
                 “
                 {localizedField(locale, {
                   ka: item.quoteKa,
@@ -180,15 +191,20 @@ export function HomeView({ locale, dict, photos, seasonPhotos }: Props) {
                 })}
                 ”
               </p>
-              <p className="mt-4 text-xs text-navy/40">— {item.author}</p>
+              <p className="mt-4 text-xs font-medium text-navy/70">— {item.author}</p>
             </li>
           ))}
         </ul>
       </section>
 
       {photos.length > 0 ? (
-        <section id="gallery" className="mx-auto w-full max-w-5xl scroll-mt-24 px-5 pb-20 sm:px-8">
-          <h2 className="mb-8 text-center font-serif text-2xl">{dict.galleryTitle}</h2>
+        <section
+          id="gallery"
+          className="relative z-10 mx-auto w-full max-w-5xl scroll-mt-24 px-5 pb-20 sm:px-8"
+        >
+          <h2 className="text-glow mb-8 text-center font-serif text-2xl font-semibold text-navy">
+            {dict.galleryTitle}
+          </h2>
           <GalleryLightbox
             photos={photos}
             title={dict.galleryTitle}
@@ -198,9 +214,11 @@ export function HomeView({ locale, dict, photos, seasonPhotos }: Props) {
       ) : null}
 
       <section id="book" className="relative z-20 mx-auto w-full max-w-xl scroll-mt-24 px-5 pb-20 sm:px-8">
-        <div className="rounded-[2rem] border border-navy/10 bg-white/90 px-5 py-8 backdrop-blur-md sm:px-8 sm:py-10">
-          <h2 className="mb-3 text-center font-serif text-2xl">{dict.bookTitle}</h2>
-          <p className="mx-auto mb-8 max-w-sm text-center text-sm leading-relaxed text-navy/60">
+        <div className="rounded-[2rem] border border-navy/10 bg-white/95 px-5 py-8 shadow-sm backdrop-blur-md sm:px-8 sm:py-10">
+          <h2 className="mb-3 text-center font-serif text-2xl font-semibold text-navy">
+            {dict.bookTitle}
+          </h2>
+          <p className="mx-auto mb-8 max-w-sm text-center text-sm leading-relaxed text-navy/80">
             {dict.bookBlurb}
           </p>
           <BookingForm dict={dict} />

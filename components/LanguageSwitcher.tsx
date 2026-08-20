@@ -30,17 +30,17 @@ export function LanguageSwitcher({ locale }: { locale: Locale }) {
   }
 
   return (
-    <div className="fixed right-4 top-4 z-20 flex gap-1 rounded-full border border-navy/15 bg-white/85 p-1 backdrop-blur-sm">
+    <div className="fixed right-4 top-4 z-20 flex gap-1 rounded-full border border-navy/20 bg-white/95 p-1 shadow-sm backdrop-blur-sm">
       {(["ka", "en", "ru"] as Locale[]).map((item) => (
         <button
           key={item}
           type="button"
           disabled={busy}
           onClick={() => void setLocale(item)}
-          className={`h-8 min-w-10 rounded-full px-2 text-xs transition-colors ${
+          className={`h-8 min-w-10 rounded-full px-2 text-xs font-medium transition-colors ${
             item === locale
-              ? "bg-terracotta font-medium text-navy"
-              : "text-navy/65 hover:text-navy"
+              ? "bg-terracotta text-navy"
+              : "text-navy/80 hover:text-navy"
           }`}
         >
           {LABELS[item]}
