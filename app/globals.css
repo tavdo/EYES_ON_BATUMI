@@ -180,7 +180,7 @@ textarea.field {
 .scene-vignette {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at center, transparent 48%, rgba(241, 232, 219, 0.55) 100%);
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(241, 232, 219, 0.35) 100%);
 }
 
 .reveal {
@@ -265,40 +265,24 @@ textarea.field {
 
 @media (max-width: 640px) {
   .scene-stage {
-    inset: 0;
+    inset: 2% 1%;
   }
 
   .scene-frame {
     display: none;
+    opacity: 0.78;
   }
 
   .scene-frame-keep {
     display: block;
-    opacity: 0.7;
-  }
-
-  .scene-frame-keep-tl {
-    width: 28vw;
-    height: 36vw;
-    left: -2% !important;
-    right: auto !important;
-    top: 4% !important;
-  }
-
-  .scene-frame-keep-tr {
-    width: 26vw;
-    height: 34vw;
-    left: auto !important;
-    right: -2% !important;
-    top: 7% !important;
   }
 
   .scene-frame::after {
-    background: linear-gradient(160deg, rgba(255, 253, 249, 0.12), rgba(22, 32, 42, 0.1));
+    background: linear-gradient(160deg, rgba(255, 253, 249, 0.08), rgba(22, 32, 42, 0.08));
   }
 
   .scene-vignette {
-    background: radial-gradient(ellipse at center, transparent 35%, rgba(241, 232, 219, 0.65) 100%);
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(241, 232, 219, 0.45) 100%);
   }
 }
 
