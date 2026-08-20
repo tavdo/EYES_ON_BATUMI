@@ -1,8 +1,10 @@
 import { redirect } from "next/navigation";
+import { listAlbumsForAdminDetailed } from "@/lib/albums";
 import { isAdminAuthenticated } from "@/lib/auth";
 import { listBookings, type Booking } from "@/lib/bookings";
 import { isBlobStorageEnabled } from "@/lib/blob-env";
 import { listActivePhotos } from "@/lib/photos";
+import { botUsername } from "@/lib/telegram/config";
 import { AdminDashboard } from "./dashboard";
 
 export const dynamic = "force-dynamic";
@@ -14,6 +16,7 @@ export default async function AdminPage() {
 
   let photos: Awaited<ReturnType<typeof listActivePhotos>> = [];
   let bookings: Booking[] = [];
+  let albums: Awaited<ReturnType<typeof listAlbumsForAdminDetailed>> = [];
   try {
     photos = await listActivePhotos();
   } catch {
@@ -24,13 +27,22 @@ export default async function AdminPage() {
   } catch {
     bookings = [];
   }
+  try {
+    albums = await listAlbumsForAdminDetailed();
+  } catch {
+    albums = [];
+  }
+
+  const username = botUsername().replace(/^@/, "") || "EYESONBATUMIbot";
 
   return (
     <AdminDashboard
       initialPhotos={photos}
       initialBookings={bookings}
+      initialAlbums={albums}
       useBlob={isBlobStorageEnabled()}
       onVercel={Boolean(process.env.VERCEL)}
+      botUsername={username}
     />
   );
 }

@@ -1,9 +1,20 @@
 import { NextResponse } from "next/server";
-import { createAlbum } from "@/lib/albums";
+import { createAlbum, listAlbumsForAdminDetailed } from "@/lib/albums";
 import { isAdminAuthenticated } from "@/lib/auth";
 import { getPhotoById } from "@/lib/photos";
+import { botUsername } from "@/lib/telegram/config";
 
 const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
+const MAX_ALBUM_PHOTOS = 50;
+
+export async function GET() {
+  if (!(await isAdminAuthenticated())) {
+    return NextResponse.json({ error: "შესვლა საჭიროა" }, { status: 401 });
+  }
+
+  const albums = await listAlbumsForAdminDetailed();
+  return NextResponse.json({ albums });
+}
 
 export async function POST(request: Request) {
   if (!(await isAdminAuthenticated())) {
@@ -21,7 +32,7 @@ export async function POST(request: Request) {
       expire?: boolean;
     };
     photoIds = Array.isArray(body.photoIds)
-      ? body.photoIds.filter((id) => typeof id === "string").slice(0, 30)
+      ? body.photoIds.filter((id) => typeof id === "string").slice(0, MAX_ALBUM_PHOTOS)
       : [];
     title =
       typeof body.title === "string" && body.title.trim()
@@ -32,8 +43,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "არასწორი მოთხოვნა" }, { status: 400 });
   }
 
-  if (photoIds.length < 2) {
-    return NextResponse.json({ error: "მინიმუმ 2 ფოტო სჭირდება" }, { status: 400 });
+  if (photoIds.length < 1) {
+    return NextResponse.json({ error: "მინიმუმ 1 ფოტო სჭირდება" }, { status: 400 });
   }
 
   for (const id of photoIds) {
@@ -43,11 +54,18 @@ export async function POST(request: Request) {
     }
   }
 
-  const albumId = await createAlbum({
+  const { id: albumId, telegramCode } = await createAlbum({
     photoIds,
     title,
     expiresAt: expire ? Date.now() + THIRTY_DAYS_MS : null,
   });
 
-  return NextResponse.json({ albumId });
+  const username = botUsername().replace(/^@/, "") || "EYESONBATUMIbot";
+
+  return NextResponse.json({
+    albumId,
+    telegramCode,
+    photoCount: photoIds.length,
+    telegramLink: `https://t.me/${username}?start=${telegramCode}`,
+  });
 }

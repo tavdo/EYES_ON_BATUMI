@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { uploadPhotoToBlob } from "@/lib/client-upload";
+import type { AdminAlbum } from "@/lib/albums";
 import type { Booking } from "@/lib/bookings";
 import type { Photo } from "@/lib/photos";
 import { QrButton } from "@/components/QrButton";
@@ -11,8 +12,10 @@ import { BookingsPanel } from "./bookings-panel";
 type Props = {
   initialPhotos: Photo[];
   initialBookings: Booking[];
+  initialAlbums: AdminAlbum[];
   useBlob: boolean;
   onVercel: boolean;
+  botUsername: string;
 };
 
 function formatDate(timestamp: number) {
@@ -23,7 +26,14 @@ function formatDate(timestamp: number) {
   }).format(new Date(timestamp));
 }
 
-export function AdminDashboard({ initialPhotos, initialBookings, useBlob, onVercel }: Props) {
+export function AdminDashboard({
+  initialPhotos,
+  initialBookings,
+  initialAlbums,
+  useBlob,
+  onVercel,
+  botUsername,
+}: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [origin, setOrigin] = useState("");
   const [photos, setPhotos] = useState(initialPhotos);
@@ -38,7 +48,9 @@ export function AdminDashboard({ initialPhotos, initialBookings, useBlob, onVerc
   const [dragging, setDragging] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState("");
+  const [albums, setAlbums] = useState(initialAlbums);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [copiedCode, setCopiedCode] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -71,22 +83,62 @@ export function AdminDashboard({ initialPhotos, initialBookings, useBlob, onVerc
     });
   }, [photos, search, filter]);
 
+  async function copyTelegramLink(code: string) {
+    const link = `https://t.me/${botUsername}?start=${code}`;
+    try {
+      await navigator.clipboard.writeText(link);
+      setCopiedCode(code);
+      window.setTimeout(
+        () => setCopiedCode((current) => (current === code ? null : current)),
+        1600,
+      );
+    } catch {
+      window.prompt("Telegram:", link);
+    }
+  }
+
   async function createAlbumFromPhotos(photoIds: string[]) {
-    if (photoIds.length < 2) return;
+    if (photoIds.length === 0) return;
     const response = await fetch("/api/admin/albums", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ photoIds, expire }),
     });
-    const data = (await response.json()) as { albumId?: string; error?: string };
-    if (data.albumId) {
-      const url = `${window.location.origin}/a/${data.albumId}`;
-      setMessage(`ალბომი: ${url}`);
+    const data = (await response.json()) as {
+      albumId?: string;
+      telegramCode?: string;
+      telegramLink?: string;
+      photoCount?: number;
+      error?: string;
+    };
+    if (data.albumId && data.telegramCode) {
+      const albumId = data.albumId;
+      const telegramCode = data.telegramCode;
+      const webUrl = `${window.location.origin}/a/${albumId}`;
+      const telegramLink =
+        data.telegramLink ?? `https://t.me/${botUsername}?start=${telegramCode}`;
+      setMessage(
+        `📁 ფოლდერი · ${data.photoCount ?? photoIds.length} ფოტო\nTelegram კოდი: ${telegramCode}\n${telegramLink}\nსაიტი: ${webUrl}`,
+      );
+      setAlbums((current) => [
+        {
+          id: albumId,
+          title: null,
+          created_at: Date.now(),
+          expires_at: expire ? Date.now() + 30 * 24 * 60 * 60 * 1000 : null,
+          active: 1,
+          telegram_code: telegramCode,
+          photo_count: data.photoCount ?? photoIds.length,
+        },
+        ...current,
+      ]);
       try {
-        await navigator.clipboard.writeText(url);
+        await navigator.clipboard.writeText(telegramLink);
       } catch {
         // ignore
       }
+    } else if (data.error) {
+      setMessage(data.error);
     }
   }
 
@@ -322,7 +374,9 @@ export function AdminDashboard({ initialPhotos, initialBookings, useBlob, onVerc
           <span className="text-sm text-cream/80">
             {uploading ? "იტვირთება..." : "ჩააგდე ფოტოები ან შეეხე ასარჩევად"}
           </span>
-          <span className="mt-2 text-xs text-cream/45">JPEG, PNG, WebP, HEIC · max 50MB</span>
+          <span className="mt-2 text-xs text-cream/45">
+            JPEG, PNG, WebP, HEIC · max 50MB · ერთ ატვირთვაზე 50 ფოტო · ფოლდერს Telegram კოდი მიენიჭება
+          </span>
         </label>
 
         <div className="mt-5 flex flex-col gap-4 sm:flex-row sm:items-center">
@@ -374,7 +428,65 @@ export function AdminDashboard({ initialPhotos, initialBookings, useBlob, onVerc
           </select>
         </div>
 
-        {message ? <p className="mt-4 text-sm text-terracotta">{message}</p> : null}
+        {message ? (
+          <p className="mt-4 whitespace-pre-wrap text-sm leading-relaxed text-terracotta">{message}</p>
+        ) : null}
+      </section>
+
+      <section className="mb-14">
+        <h2 className="mb-5 text-sm tracking-wide text-cream/80">ფოლდერები · Telegram კოდები</h2>
+        {albums.length === 0 ? (
+          <p className="text-sm text-cream/50">
+            ატვირთე ფოტოები — ავტომატურად შეიქმნება ფოლდერი და Telegram კოდი.
+          </p>
+        ) : (
+          <ul className="grid gap-4 sm:grid-cols-2">
+            {albums.map((album) => {
+              const code = album.telegram_code;
+              const webUrl = `${origin}/a/${album.id}`;
+              const telegramLink = code ? `https://t.me/${botUsername}?start=${code}` : null;
+              return (
+                <li
+                  key={album.id}
+                  className="rounded-2xl border border-cream/10 px-5 py-5"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="font-medium">
+                        {album.title || "ფოლდერი"} · {album.photo_count} ფოტო
+                      </p>
+                      <p className="mt-1 text-xs text-cream/45">{formatDate(album.created_at)}</p>
+                    </div>
+                    {code ? (
+                      <span className="rounded-full bg-terracotta/15 px-3 py-1 font-mono text-sm text-terracotta">
+                        {code}
+                      </span>
+                    ) : null}
+                  </div>
+                  <div className="mt-4 flex flex-col gap-2">
+                    {telegramLink ? (
+                      <button
+                        type="button"
+                        onClick={() => void copyTelegramLink(code!)}
+                        className="h-10 rounded-full bg-terracotta text-sm font-medium text-navy"
+                      >
+                        {copiedCode === code ? "კოპირებულია" : "Telegram ბმული"}
+                      </button>
+                    ) : null}
+                    <a
+                      href={webUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="h-10 rounded-full border border-cream/20 text-center text-sm leading-10 text-cream/80 hover:border-terracotta hover:text-terracotta"
+                    >
+                      საიტზე ნახვა
+                    </a>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        )}
       </section>
 
       <section>

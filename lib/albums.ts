@@ -1,6 +1,7 @@
 import { nanoid } from "nanoid";
 import { ensureSchema, getTurso } from "./db";
 import { getPhotoById, isPhotoAccessible, PHOTO_SELECT, type Photo } from "./photos";
+import { generateUniqueDeliveryCode, normalizePhotoCode } from "./telegram/codes";
 
 export type Album = {
   id: string;
@@ -8,9 +9,16 @@ export type Album = {
   created_at: number;
   expires_at: number | null;
   active: number;
+  telegram_code: string | null;
 };
 
-type AlbumRow = Album;
+export type AdminAlbum = Album & {
+  photo_count: number;
+};
+
+type AlbumRow = Album & {
+  photo_count?: number | string | null;
+};
 
 function mapAlbum(row: AlbumRow): Album {
   return {
@@ -19,6 +27,7 @@ function mapAlbum(row: AlbumRow): Album {
     created_at: Number(row.created_at),
     expires_at: row.expires_at == null ? null : Number(row.expires_at),
     active: Number(row.active),
+    telegram_code: row.telegram_code == null ? null : String(row.telegram_code),
   };
 }
 
@@ -36,11 +45,12 @@ export async function createAlbum(input: {
   await ensureSchema();
   const id = nanoid(16);
   const createdAt = Date.now();
+  const telegramCode = await generateUniqueDeliveryCode();
 
   await getTurso().execute({
-    sql: `INSERT INTO albums (id, title, created_at, expires_at, active)
-          VALUES (?, ?, ?, ?, 1)`,
-    args: [id, input.title ?? null, createdAt, input.expiresAt ?? null],
+    sql: `INSERT INTO albums (id, title, created_at, expires_at, active, telegram_code)
+          VALUES (?, ?, ?, ?, 1, ?)`,
+    args: [id, input.title ?? null, createdAt, input.expiresAt ?? null, telegramCode],
   });
 
   for (let index = 0; index < input.photoIds.length; index += 1) {
@@ -50,14 +60,25 @@ export async function createAlbum(input: {
     });
   }
 
-  return id;
+  return { id, telegramCode };
 }
 
 export async function getAlbumById(id: string) {
   await ensureSchema();
   const result = await getTurso().execute({
-    sql: "SELECT id, title, created_at, expires_at, active FROM albums WHERE id = ?",
+    sql: "SELECT id, title, created_at, expires_at, active, telegram_code FROM albums WHERE id = ?",
     args: [id],
+  });
+  const row = result.rows[0] as unknown as AlbumRow | undefined;
+  return row ? mapAlbum(row) : null;
+}
+
+export async function getAlbumByTelegramCode(rawCode: string) {
+  await ensureSchema();
+  const code = normalizePhotoCode(rawCode);
+  const result = await getTurso().execute({
+    sql: "SELECT id, title, created_at, expires_at, active, telegram_code FROM albums WHERE telegram_code = ?",
+    args: [code],
   });
   const row = result.rows[0] as unknown as AlbumRow | undefined;
   return row ? mapAlbum(row) : null;
@@ -92,12 +113,38 @@ export async function getAccessibleAlbumWithPhotos(id: string) {
   return { album, photos };
 }
 
+export async function getAccessibleAlbumByTelegramCode(rawCode: string) {
+  const album = await getAlbumByTelegramCode(rawCode);
+  if (!album || !isAlbumAccessible(album)) return null;
+  return getAccessibleAlbumWithPhotos(album.id);
+}
+
 export async function listAlbumsForAdmin() {
   await ensureSchema();
   const result = await getTurso().execute(
-    `SELECT id, title, created_at, expires_at, active FROM albums WHERE active = 1 ORDER BY created_at DESC`,
+    `SELECT id, title, created_at, expires_at, active, telegram_code FROM albums WHERE active = 1 ORDER BY created_at DESC`,
   );
   return (result.rows as unknown as AlbumRow[]).map(mapAlbum);
+}
+
+export async function listAlbumsForAdminDetailed(limit = 40) {
+  await ensureSchema();
+  const result = await getTurso().execute({
+    sql: `SELECT a.id, a.title, a.created_at, a.expires_at, a.active, a.telegram_code,
+                 COUNT(ap.photo_id) AS photo_count
+          FROM albums a
+          LEFT JOIN album_photos ap ON ap.album_id = a.id
+          WHERE a.active = 1
+          GROUP BY a.id
+          ORDER BY a.created_at DESC
+          LIMIT ?`,
+    args: [limit],
+  });
+
+  return (result.rows as unknown as AlbumRow[]).map((row) => ({
+    ...mapAlbum(row),
+    photo_count: Number(row.photo_count ?? 0),
+  })) satisfies AdminAlbum[];
 }
 
 export async function deactivateAlbum(id: string) {

@@ -11,6 +11,7 @@ import {
   isAdmin,
 } from "./config";
 import { isPhotoCode } from "./codes";
+import { deliverAlbumPhotos } from "./delivery";
 import {
   createTelegramBooking,
   getTelegramBooking,
@@ -18,6 +19,7 @@ import {
   setTelegramBookingStatus,
 } from "./bookings";
 import { getTelegramPhotoByCode, saveTelegramPhoto } from "./photos";
+import { getAccessibleAlbumByTelegramCode } from "@/lib/albums";
 import {
   clearSession,
   getSession,
@@ -56,18 +58,24 @@ async function startBooking(ctx: BotContext) {
   await ctx.reply("რომელი თარიღი გირჩევნია?", removeKeyboard());
 }
 
-async function deliverPhoto(ctx: BotContext, rawCode: string) {
+async function deliverByCode(ctx: BotContext, rawCode: string) {
   if (!ctx.chat) return;
-  const photo = await getTelegramPhotoByCode(rawCode);
 
-  if (!photo) {
-    await ctx.reply(INVALID_CODE_MESSAGE, bookingKeyboard());
+  const single = await getTelegramPhotoByCode(rawCode);
+  if (single) {
+    await ctx.telegram.sendDocument(ctx.chat.id, single.file_id, {
+      caption: DELIVERY_CAPTION,
+    });
     return;
   }
 
-  await ctx.telegram.sendDocument(ctx.chat.id, photo.file_id, {
-    caption: DELIVERY_CAPTION,
-  });
+  const album = await getAccessibleAlbumByTelegramCode(rawCode);
+  if (album) {
+    await deliverAlbumPhotos(ctx, album.photos);
+    return;
+  }
+
+  await ctx.reply(INVALID_CODE_MESSAGE, bookingKeyboard());
 }
 
 async function finishAddPhoto(ctx: BotContext, fileId: string, adminUserId: number) {
@@ -251,7 +259,7 @@ export function createTelegramBot() {
   bot.start(async (ctx) => {
     const payload = ctx.startPayload?.trim();
     if (payload) {
-      await deliverPhoto(ctx, payload);
+      await deliverByCode(ctx, payload);
       return;
     }
 
@@ -282,7 +290,7 @@ export function createTelegramBot() {
     }
 
     if (isPhotoCode(text)) {
-      await deliverPhoto(ctx, text);
+      await deliverByCode(ctx, text);
     }
   });
 

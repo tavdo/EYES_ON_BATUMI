@@ -149,6 +149,16 @@ async function migrate() {
     ],
     "write",
   );
+
+  const albumInfo = await db.execute("PRAGMA table_info(albums)");
+  const albumColumns = new Set(albumInfo.rows.map((row) => String(row.name)));
+
+  if (!albumColumns.has("telegram_code")) {
+    await db.execute("ALTER TABLE albums ADD COLUMN telegram_code TEXT");
+  }
+  await db.execute(
+    "CREATE UNIQUE INDEX IF NOT EXISTS idx_albums_telegram_code ON albums (telegram_code) WHERE telegram_code IS NOT NULL",
+  );
 }
 
 export function ensureSchema() {

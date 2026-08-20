@@ -26,9 +26,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "ფაილი არ არის არჩეული" }, { status: 400 });
   }
 
-  if (files.length > 20) {
+  if (files.length > 50) {
     return NextResponse.json(
-      { error: "ერთდროულად მაქსიმუმ 20 ფოტო" },
+      { error: "ერთდროულად მაქსიმუმ 50 ფოტო" },
       { status: 400 },
     );
   }
