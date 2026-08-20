@@ -3,13 +3,11 @@
 import { useState } from "react";
 import { TIP_URL } from "@/lib/contact";
 import type { Dictionary } from "@/lib/i18n";
-import { SOCIAL_HANDLE } from "@/lib/social";
-
 export function PhotoActions({ dict, photoId }: { dict: Dictionary; photoId: string }) {
   const [copied, setCopied] = useState(false);
 
   async function copyShareText() {
-    const text = `ჩემი კადრი ბათუმიდან 📸 ${SOCIAL_HANDLE}\neyes.on.batumi`;
+    const text = dict.photoShareText;
     try {
       await navigator.clipboard.writeText(text);
       setCopied(true);

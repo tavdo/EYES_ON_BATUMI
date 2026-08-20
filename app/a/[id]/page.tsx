@@ -48,7 +48,7 @@ export default async function AlbumPage({ params }: PageProps) {
         </Link>
         <h1 className="mt-8 font-serif text-3xl">{album.title || dict.albumTitle}</h1>
         <p className="mt-3 text-sm text-cream/60">
-          {photos.length} {dict.albumDownload.toLowerCase()}
+          {photos.length} {dict.albumFrames}
         </p>
       </header>
 

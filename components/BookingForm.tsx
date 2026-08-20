@@ -2,16 +2,24 @@
 
 import { FormEvent, useMemo, useState } from "react";
 import { ContactLinks } from "@/components/ContactLinks";
+import type { Dictionary } from "@/lib/i18n";
 
-const TIMES = [
-  { value: "morning", label: "დილა" },
-  { value: "afternoon", label: "შუადღე" },
-  { value: "evening", label: "საღამო" },
-  { value: "flexible", label: "როგორც გამოვა" },
-] as const;
+type Props = {
+  dict: Dictionary;
+};
 
-export function BookingForm() {
+export function BookingForm({ dict }: Props) {
   const minDate = useMemo(() => new Date().toISOString().slice(0, 10), []);
+  const times = useMemo(
+    () =>
+      [
+        { value: "morning", label: dict.timeMorning },
+        { value: "afternoon", label: dict.timeAfternoon },
+        { value: "evening", label: dict.timeEvening },
+        { value: "flexible", label: dict.timeFlexible },
+      ] as const,
+    [dict],
+  );
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [instagram, setInstagram] = useState("");
@@ -44,12 +52,12 @@ export function BookingForm() {
       });
       const data = (await response.json().catch(() => null)) as { error?: string } | null;
       if (!response.ok) {
-        setError(data?.error ?? "გაგზავნა ვერ მოხერხდა");
+        setError(data?.error ?? dict.formError);
         return;
       }
       setDone(true);
     } catch {
-      setError("გაგზავნა ვერ მოხერხდა");
+      setError(dict.formError);
     } finally {
       setPending(false);
     }
@@ -58,10 +66,8 @@ export function BookingForm() {
   if (done) {
     return (
       <div className="rounded-3xl border border-cream/15 px-6 py-10 text-center">
-        <p className="font-serif text-2xl">მიღებულია</p>
-        <p className="mt-4 text-sm leading-relaxed text-cream/70">
-          მოთხოვნა გაიგზავნა. მალე დაგიკავშირდებით, ან შეგიძლია ახლავე დაგვწერო WhatsApp-ზე.
-        </p>
+        <p className="font-serif text-2xl">{dict.formSuccessTitle}</p>
+        <p className="mt-4 text-sm leading-relaxed text-cream/70">{dict.formSuccessBody}</p>
         <ContactLinks />
       </div>
     );
@@ -79,7 +85,7 @@ export function BookingForm() {
       />
 
       <label className="flex flex-col gap-2 text-sm text-cream/75">
-        სახელი
+        {dict.formName}
         <input
           required
           value={name}
@@ -89,7 +95,7 @@ export function BookingForm() {
       </label>
 
       <label className="flex flex-col gap-2 text-sm text-cream/75">
-        ტელეფონი
+        {dict.formPhone}
         <input
           required
           type="tel"
@@ -102,7 +108,7 @@ export function BookingForm() {
       </label>
 
       <label className="flex flex-col gap-2 text-sm text-cream/75">
-        Instagram
+        {dict.formInstagram}
         <input
           value={instagram}
           onChange={(event) => setInstagram(event.target.value)}
@@ -113,7 +119,7 @@ export function BookingForm() {
 
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="flex flex-col gap-2 text-sm text-cream/75">
-          სასურველი თარიღი
+          {dict.formDate}
           <input
             required
             type="date"
@@ -124,13 +130,13 @@ export function BookingForm() {
           />
         </label>
         <label className="flex flex-col gap-2 text-sm text-cream/75">
-          დრო
+          {dict.formTime}
           <select
             value={timeOfDay}
             onChange={(event) => setTimeOfDay(event.target.value)}
             className="field"
           >
-            {TIMES.map((item) => (
+            {times.map((item) => (
               <option key={item.value} value={item.value}>
                 {item.label}
               </option>
@@ -140,13 +146,13 @@ export function BookingForm() {
       </div>
 
       <label className="flex flex-col gap-2 text-sm text-cream/75">
-        შეტყობინება
+        {dict.formMessage}
         <textarea
           value={message}
           onChange={(event) => setMessage(event.target.value)}
           rows={4}
           maxLength={500}
-          placeholder="რამდენი ადამიანი, სად შევხვდეთ..."
+          placeholder={dict.formMessagePlaceholder}
           className="field min-h-28 resize-none py-3"
         />
       </label>
@@ -158,7 +164,7 @@ export function BookingForm() {
         disabled={pending}
         className="btn-lift mt-2 h-12 rounded-full bg-terracotta text-[15px] font-medium text-navy disabled:opacity-50"
       >
-        {pending ? "იგზავნება..." : "დაჯავშნე გადაღება"}
+        {pending ? dict.formSubmitting : dict.formSubmit}
       </button>
     </form>
   );

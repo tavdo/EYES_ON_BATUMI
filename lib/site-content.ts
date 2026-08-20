@@ -9,13 +9,11 @@ export const PRICING = {
   noteRu: "Цена зависит от локации и количества людей",
 };
 
-export const LOCATIONS = [
-  "ბულვარი",
-  "ძველი ქალაქი",
-  "ორპark",
-  "Piazza",
-  "Batumi streets",
-];
+export const LOCATIONS: Record<"ka" | "en" | "ru", string[]> = {
+  ka: ["ბულვარი", "ძველი ქალაქი", "6 მაისის პარკი", "Piazza", "ქუჩები"],
+  en: ["Boulevard", "Old Town", "6 May Park", "Piazza", "City streets"],
+  ru: ["Бульвар", "Старый город", "Парк 6 мая", "Piazza", "Улицы города"],
+};
 
 export const TESTIMONIALS = [
   {
@@ -43,7 +41,7 @@ export const HOW_IT_WORKS = [
     titleKa: "დაჯავშნე ან დაგვიკავშირდი",
     titleEn: "Book or message us",
     titleRu: "Забронируй или напиши",
-    bodyKa: "WhatsApp-ით ან ფორმით — დაგიკავშირდებით და შევთანხმდებით ადგილს.",
+    bodyKa: "WhatsApp-ით ან ფორმით — მალე დაგიკავშირდებით და შევთანხმდებით ადგილს.",
     bodyEn: "Via WhatsApp or the form — we confirm time and spot.",
     bodyRu: "WhatsApp или форма — согласуем время и место.",
   },
@@ -70,7 +68,7 @@ export const SEASON_LABELS: Record<
   { ka: string; en: string; ru: string }
 > = {
   summer: { ka: "ზაფხული ბათუმში", en: "Summer in Batumi", ru: "Лето в Батуми" },
-  autumn: { ka: "შემოდგომა", en: "Autumn light", ru: "Осенняя свет" },
+  autumn: { ka: "შემოდგომა", en: "Autumn light", ru: "Осенний свет" },
   winter: { ka: "ზამა", en: "Winter mood", ru: "Зимнее настроение" },
   spring: { ka: "გაზაფხული", en: "Spring streets", ru: "Весенние улицы" },
 };

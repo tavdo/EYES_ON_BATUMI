@@ -8,14 +8,9 @@ import { GalleryLightbox } from "@/components/GalleryLightbox";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { WHATSAPP_URL } from "@/lib/contact";
 import type { Dictionary, Locale } from "@/lib/i18n";
-import { localizedField } from "@/lib/i18n";
+import { getPricingLine, localizedField } from "@/lib/i18n";
 import type { Photo } from "@/lib/photos";
-import {
-  HOW_IT_WORKS,
-  LOCATIONS,
-  PRICING,
-  TESTIMONIALS,
-} from "@/lib/site-content";
+import { HOW_IT_WORKS, LOCATIONS, TESTIMONIALS } from "@/lib/site-content";
 import { INSTAGRAM_URL, TIKTOK_URL } from "@/lib/social";
 
 type Props = {
@@ -113,12 +108,11 @@ export function HomeView({ locale, dict, photos, seasonPhotos }: Props) {
 
       <section className="mx-auto w-full max-w-xl px-5 pb-16 text-center sm:px-8">
         <h2 className="mb-4 font-serif text-2xl">{dict.pricingTitle}</h2>
-        <p className="font-serif text-4xl text-terracotta">
-          {dict.pricingFrom} {PRICING.fromGel} ₾
-        </p>
+        <p className="font-serif text-4xl text-terracotta">{getPricingLine(locale)}</p>
         <p className="mt-4 text-sm leading-relaxed text-cream/65">{dict.pricingNote}</p>
-        <div className="mt-8 flex flex-wrap justify-center gap-2">
-          {LOCATIONS.map((place) => (
+        <h3 className="mt-10 mb-4 text-xs tracking-wide text-cream/45">{dict.locationsTitle}</h3>
+        <div className="flex flex-wrap justify-center gap-2">
+          {LOCATIONS[locale].map((place) => (
             <span
               key={place}
               className="rounded-full border border-cream/15 px-4 py-2 text-xs text-cream/70"
@@ -127,7 +121,6 @@ export function HomeView({ locale, dict, photos, seasonPhotos }: Props) {
             </span>
           ))}
         </div>
-        <p className="mt-6 text-xs tracking-wide text-cream/45">{dict.locationsTitle}</p>
       </section>
 
       {seasonPhotos.length > 0 ? (
@@ -188,7 +181,11 @@ export function HomeView({ locale, dict, photos, seasonPhotos }: Props) {
       {photos.length > 0 ? (
         <section id="gallery" className="mx-auto w-full max-w-5xl scroll-mt-24 px-5 pb-20 sm:px-8">
           <h2 className="mb-8 text-center font-serif text-2xl">{dict.galleryTitle}</h2>
-          <GalleryLightbox photos={photos} title={dict.galleryTitle} />
+          <GalleryLightbox
+            photos={photos}
+            title={dict.galleryTitle}
+            openLabel={dict.galleryOpen}
+          />
         </section>
       ) : null}
 
@@ -197,7 +194,7 @@ export function HomeView({ locale, dict, photos, seasonPhotos }: Props) {
         <p className="mx-auto mb-8 max-w-sm text-center text-sm leading-relaxed text-cream/65">
           {dict.bookBlurb}
         </p>
-        <BookingForm />
+        <BookingForm dict={dict} />
         <ContactLinks label={dict.contactDirect} />
       </section>
     </main>

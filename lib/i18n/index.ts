@@ -1,5 +1,6 @@
 export {
   getDictionary,
+  getPricingLine,
   isLocale,
   localizedField,
   LOCALE_COOKIE,

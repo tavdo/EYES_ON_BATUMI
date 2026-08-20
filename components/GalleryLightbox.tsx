@@ -6,9 +6,10 @@ import type { Photo } from "@/lib/photos";
 type Props = {
   photos: Photo[];
   title: string;
+  openLabel: string;
 };
 
-export function GalleryLightbox({ photos, title }: Props) {
+export function GalleryLightbox({ photos, title, openLabel }: Props) {
   const [openId, setOpenId] = useState<string | null>(null);
   const openIndex = openId ? photos.findIndex((photo) => photo.id === openId) : -1;
   const current = openIndex >= 0 ? photos[openIndex] : null;
@@ -94,7 +95,7 @@ export function GalleryLightbox({ photos, title }: Props) {
                 href={`/p/${current.id}`}
                 className="rounded-full bg-terracotta px-5 py-2 text-sm font-medium text-navy"
               >
-                {title}
+                {openLabel}
               </a>
               <button
                 type="button"
