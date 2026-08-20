@@ -21,7 +21,7 @@ html {
 }
 
 body {
-  background: var(--cream);
+  background: transparent;
   color: var(--navy);
   font-family: var(--font-noto-sans), sans-serif;
 }
@@ -80,7 +80,7 @@ textarea.field {
 .scene {
   position: fixed;
   inset: 0;
-  z-index: -1;
+  z-index: 0;
   overflow: hidden;
   pointer-events: none;
   perspective: 1100px;

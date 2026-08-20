@@ -33,7 +33,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="ka"
       className={`${notoSans.variable} ${notoSerif.variable} h-full antialiased`}
     >
-      <body className="relative min-h-full bg-cream text-navy">
+      <body className="relative min-h-full text-navy">
         <SceneBackground />
         <div className="relative z-10">{children}</div>
       </body>
