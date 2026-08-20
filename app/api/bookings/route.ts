@@ -69,14 +69,21 @@ export async function POST(request: Request) {
     console.error("booking analytics failed", error);
   }
 
-  void notifyNewBooking({
-    name,
-    phone,
-    instagram,
-    preferredDate,
-    timeOfDay,
-    message,
-  });
+  try {
+    const notified = await notifyNewBooking({
+      name,
+      phone,
+      instagram,
+      preferredDate,
+      timeOfDay,
+      message,
+    });
+    if (!notified) {
+      console.error("booking telegram notify skipped or failed");
+    }
+  } catch (error) {
+    console.error("booking telegram notify failed", error);
+  }
 
   return NextResponse.json({ ok: true });
 }

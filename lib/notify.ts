@@ -1,3 +1,5 @@
+import { whatsappUrl } from "@/lib/contact";
+
 const TIME_LABEL: Record<string, string> = {
   morning: "დილა",
   afternoon: "შუადღე",
@@ -12,7 +14,10 @@ function telegramConfigured() {
 }
 
 async function sendTelegram(text: string) {
-  if (!telegramConfigured()) return false;
+  if (!telegramConfigured()) {
+    console.error("telegram notify not configured (BOT_TOKEN / ADMIN_TELEGRAM_ID)");
+    return false;
+  }
 
   const token = process.env.BOT_TOKEN?.trim() || process.env.TELEGRAM_BOT_TOKEN!;
   const chatId = process.env.TELEGRAM_CHAT_ID?.trim() || process.env.ADMIN_TELEGRAM_ID!;
@@ -27,7 +32,13 @@ async function sendTelegram(text: string) {
     }),
   });
 
-  return response.ok;
+  if (!response.ok) {
+    const body = await response.text().catch(() => "");
+    console.error("telegram sendMessage failed", response.status, body);
+    return false;
+  }
+
+  return true;
 }
 
 export async function notifyNewBooking(input: {
@@ -38,6 +49,12 @@ export async function notifyNewBooking(input: {
   timeOfDay: string;
   message: string | null;
 }) {
+  const digits = input.phone.replace(/\D/g, "");
+  const wa =
+    digits.length >= 9
+      ? whatsappUrl(digits.startsWith("995") ? digits : `995${digits.replace(/^0/, "")}`)
+      : null;
+
   const lines = [
     "📸 ახალი ჯავშანი — eyes.on.batumi",
     "",
@@ -47,9 +64,10 @@ export async function notifyNewBooking(input: {
     `თარიღი: ${input.preferredDate}`,
     `დრო: ${TIME_LABEL[input.timeOfDay] ?? input.timeOfDay}`,
     input.message ? `შეტყობინება: ${input.message}` : null,
+    wa ? `WhatsApp: ${wa}` : null,
   ].filter(Boolean);
 
-  await sendTelegram(lines.join("\n"));
+  return sendTelegram(lines.join("\n"));
 }
 
 export async function notifyWeeklySummary(input: {
@@ -69,7 +87,7 @@ export async function notifyWeeklySummary(input: {
     `ჩამოტვირთვები: ${input.downloads}`,
   ];
 
-  await sendTelegram(lines.join("\n"));
+  return sendTelegram(lines.join("\n"));
 }
 
 export { telegramConfigured };
