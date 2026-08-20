@@ -65,9 +65,9 @@ export function BookingForm({ dict }: Props) {
 
   if (done) {
     return (
-      <div className="rounded-3xl border border-cream/15 px-6 py-10 text-center">
+      <div className="rounded-3xl border border-navy/15 px-6 py-10 text-center">
         <p className="font-serif text-2xl">{dict.formSuccessTitle}</p>
-        <p className="mt-4 text-sm leading-relaxed text-cream/70">{dict.formSuccessBody}</p>
+        <p className="mt-4 text-sm leading-relaxed text-navy/65">{dict.formSuccessBody}</p>
         <ContactLinks />
       </div>
     );
@@ -84,7 +84,7 @@ export function BookingForm({ dict }: Props) {
         aria-hidden
       />
 
-      <label className="flex flex-col gap-2 text-sm text-cream/75">
+      <label className="flex flex-col gap-2 text-sm text-navy/70">
         {dict.formName}
         <input
           required
@@ -94,7 +94,7 @@ export function BookingForm({ dict }: Props) {
         />
       </label>
 
-      <label className="flex flex-col gap-2 text-sm text-cream/75">
+      <label className="flex flex-col gap-2 text-sm text-navy/70">
         {dict.formPhone}
         <input
           required
@@ -107,7 +107,7 @@ export function BookingForm({ dict }: Props) {
         />
       </label>
 
-      <label className="flex flex-col gap-2 text-sm text-cream/75">
+      <label className="flex flex-col gap-2 text-sm text-navy/70">
         {dict.formInstagram}
         <input
           value={instagram}
@@ -118,7 +118,7 @@ export function BookingForm({ dict }: Props) {
       </label>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <label className="flex flex-col gap-2 text-sm text-cream/75">
+        <label className="flex flex-col gap-2 text-sm text-navy/70">
           {dict.formDate}
           <input
             required
@@ -129,7 +129,7 @@ export function BookingForm({ dict }: Props) {
             className="field"
           />
         </label>
-        <label className="flex flex-col gap-2 text-sm text-cream/75">
+        <label className="flex flex-col gap-2 text-sm text-navy/70">
           {dict.formTime}
           <select
             value={timeOfDay}
@@ -145,7 +145,7 @@ export function BookingForm({ dict }: Props) {
         </label>
       </div>
 
-      <label className="flex flex-col gap-2 text-sm text-cream/75">
+      <label className="flex flex-col gap-2 text-sm text-navy/70">
         {dict.formMessage}
         <textarea
           value={message}

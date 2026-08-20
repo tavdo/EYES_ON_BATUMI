@@ -9,8 +9,8 @@ export function ContactLinks({
   telegramLabel?: string;
 }) {
   return (
-    <div className="mt-10 border-t border-cream/10 pt-8 text-center">
-      <p className="mb-4 text-sm text-cream/60">{label ?? "ან დაგვიკავშირდი პირდაპირ"}</p>
+    <div className="mt-10 border-t border-navy/10 pt-8 text-center">
+      <p className="mb-4 text-sm text-navy/55">{label ?? "ან დაგვიკავშირდი პირდაპირ"}</p>
       <div className="mb-5 flex flex-wrap items-center justify-center gap-2">
         <a
           href={TELEGRAM_BOT_URL}
@@ -24,7 +24,7 @@ export function ContactLinks({
           href={whatsappUrl()}
           target="_blank"
           rel="noreferrer"
-          className="rounded-full border border-cream/20 px-5 py-2.5 text-sm text-cream/80 transition-all hover:border-terracotta hover:text-terracotta"
+          className="rounded-full border border-navy/20 px-5 py-2.5 text-sm text-navy/75 transition-all hover:border-terracotta hover:text-terracotta"
         >
           WhatsApp
         </a>
@@ -39,13 +39,13 @@ export function ContactLinks({
               href={whatsappUrl(phone.e164)}
               target="_blank"
               rel="noreferrer"
-              className="rounded-full border border-cream/20 px-4 py-2 text-sm text-cream/80 transition-all hover:border-terracotta hover:text-terracotta"
+              className="rounded-full border border-navy/20 px-4 py-2 text-sm text-navy/75 transition-all hover:border-terracotta hover:text-terracotta"
             >
               WhatsApp
             </a>
             <a
               href={telUrl(phone.e164)}
-              className="rounded-full border border-cream/20 px-4 py-2 text-sm text-cream/80 transition-all hover:border-terracotta hover:text-terracotta"
+              className="rounded-full border border-navy/20 px-4 py-2 text-sm text-navy/75 transition-all hover:border-terracotta hover:text-terracotta"
             >
               {phone.display}
             </a>

@@ -27,13 +27,13 @@ export function HomeView({ locale, dict, photos, seasonPhotos }: Props) {
       <LanguageSwitcher locale={locale} />
 
       <section className="flex min-h-dvh flex-col items-center justify-center px-6 py-16">
-        <p className="reveal mb-10 text-[11px] tracking-[0.32em] text-cream/65">
+        <p className="reveal mb-10 text-[11px] tracking-[0.32em] text-navy/60">
           {dict.tagline}
         </p>
         <h1 className="reveal reveal-delay text-center text-4xl font-medium tracking-[0.1em] sm:text-5xl">
           eyes.on.batumi
         </h1>
-        <p className="reveal reveal-delay-2 mt-6 max-w-xs text-center font-serif text-lg leading-relaxed text-cream/80">
+        <p className="reveal reveal-delay-2 mt-6 max-w-xs text-center font-serif text-lg leading-relaxed text-navy/75">
           {dict.heroSubtitle}
         </p>
         <div className="reveal reveal-delay-3 mt-14 flex flex-wrap items-center justify-center gap-4">
@@ -46,14 +46,14 @@ export function HomeView({ locale, dict, photos, seasonPhotos }: Props) {
           {photos.length > 0 ? (
             <a
               href="#gallery"
-              className="rounded-full border border-cream/20 px-5 py-2.5 text-sm text-cream/80 transition-all hover:border-terracotta hover:text-terracotta"
+              className="rounded-full border border-navy/20 px-5 py-2.5 text-sm text-navy/75 transition-all hover:border-terracotta hover:text-terracotta"
             >
               {dict.gallery}
             </a>
           ) : null}
           <Link
             href={TELEGRAM_BOT_URL}
-            className="rounded-full border border-cream/20 px-5 py-2.5 text-sm text-cream/80 transition-all hover:border-terracotta hover:text-terracotta"
+            className="rounded-full border border-navy/20 px-5 py-2.5 text-sm text-navy/75 transition-all hover:border-terracotta hover:text-terracotta"
             target="_blank"
             rel="noreferrer"
           >
@@ -61,7 +61,7 @@ export function HomeView({ locale, dict, photos, seasonPhotos }: Props) {
           </Link>
           <Link
             href={WHATSAPP_URL}
-            className="rounded-full border border-cream/20 px-5 py-2.5 text-sm text-cream/80 transition-all hover:border-terracotta hover:text-terracotta"
+            className="rounded-full border border-navy/20 px-5 py-2.5 text-sm text-navy/75 transition-all hover:border-terracotta hover:text-terracotta"
             target="_blank"
             rel="noreferrer"
           >
@@ -69,7 +69,7 @@ export function HomeView({ locale, dict, photos, seasonPhotos }: Props) {
           </Link>
           <Link
             href={INSTAGRAM_URL}
-            className="rounded-full border border-cream/20 px-5 py-2.5 text-sm text-cream/80 transition-all hover:border-terracotta hover:text-terracotta"
+            className="rounded-full border border-navy/20 px-5 py-2.5 text-sm text-navy/75 transition-all hover:border-terracotta hover:text-terracotta"
             target="_blank"
             rel="noreferrer"
           >
@@ -77,7 +77,7 @@ export function HomeView({ locale, dict, photos, seasonPhotos }: Props) {
           </Link>
           <Link
             href={TIKTOK_URL}
-            className="rounded-full border border-cream/20 px-5 py-2.5 text-sm text-cream/80 transition-all hover:border-terracotta hover:text-terracotta"
+            className="rounded-full border border-navy/20 px-5 py-2.5 text-sm text-navy/75 transition-all hover:border-terracotta hover:text-terracotta"
             target="_blank"
             rel="noreferrer"
           >
@@ -92,7 +92,7 @@ export function HomeView({ locale, dict, photos, seasonPhotos }: Props) {
           {HOW_IT_WORKS.map((step, index) => (
             <li
               key={step.titleKa}
-              className="rounded-2xl border border-cream/10 px-5 py-6"
+              className="rounded-2xl border border-navy/10 px-5 py-6"
             >
               <p className="mb-2 text-xs tracking-wide text-terracotta">0{index + 1}</p>
               <p className="font-medium">
@@ -102,7 +102,7 @@ export function HomeView({ locale, dict, photos, seasonPhotos }: Props) {
                   ru: step.titleRu,
                 })}
               </p>
-              <p className="mt-3 text-sm leading-relaxed text-cream/65">
+              <p className="mt-3 text-sm leading-relaxed text-navy/60">
                 {localizedField(locale, {
                   ka: step.bodyKa,
                   en: step.bodyEn,
@@ -117,13 +117,13 @@ export function HomeView({ locale, dict, photos, seasonPhotos }: Props) {
       <section className="mx-auto w-full max-w-xl px-5 pb-16 text-center sm:px-8">
         <h2 className="mb-4 font-serif text-2xl">{dict.pricingTitle}</h2>
         <p className="font-serif text-4xl text-terracotta">{getPricingLine(locale)}</p>
-        <p className="mt-4 text-sm leading-relaxed text-cream/65">{dict.pricingNote}</p>
-        <h3 className="mt-10 mb-4 text-xs tracking-wide text-cream/45">{dict.locationsTitle}</h3>
+        <p className="mt-4 text-sm leading-relaxed text-navy/60">{dict.pricingNote}</p>
+        <h3 className="mt-10 mb-4 text-xs tracking-wide text-navy/40">{dict.locationsTitle}</h3>
         <div className="flex flex-wrap justify-center gap-2">
           {LOCATIONS[locale].map((place) => (
             <span
               key={place}
-              className="rounded-full border border-cream/15 px-4 py-2 text-xs text-cream/70"
+              className="rounded-full border border-navy/15 px-4 py-2 text-xs text-navy/65"
             >
               {place}
             </span>
@@ -136,7 +136,7 @@ export function HomeView({ locale, dict, photos, seasonPhotos }: Props) {
           <div className="mb-8 flex items-end justify-between gap-4">
             <h2 className="font-serif text-2xl">{dict.seasonalTitle}</h2>
             {photos.length > seasonPhotos.length ? (
-              <a href="#gallery" className="text-sm text-cream/60 hover:text-terracotta">
+              <a href="#gallery" className="text-sm text-navy/55 hover:text-terracotta">
                 {dict.seasonalMore} →
               </a>
             ) : null}
@@ -146,7 +146,7 @@ export function HomeView({ locale, dict, photos, seasonPhotos }: Props) {
               <li key={photo.id}>
                 <Link
                   href={`/p/${photo.id}`}
-                  className="group block overflow-hidden rounded-2xl border border-cream/10 bg-black/20"
+                  className="group block overflow-hidden rounded-2xl border border-navy/10 bg-black/20"
                 >
                   <div className="aspect-[4/5]">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -169,9 +169,9 @@ export function HomeView({ locale, dict, photos, seasonPhotos }: Props) {
           {TESTIMONIALS.map((item) => (
             <li
               key={item.author}
-              className="rounded-2xl border border-cream/10 px-5 py-6"
+              className="rounded-2xl border border-navy/10 px-5 py-6"
             >
-              <p className="text-sm leading-relaxed text-cream/75">
+              <p className="text-sm leading-relaxed text-navy/70">
                 “
                 {localizedField(locale, {
                   ka: item.quoteKa,
@@ -180,7 +180,7 @@ export function HomeView({ locale, dict, photos, seasonPhotos }: Props) {
                 })}
                 ”
               </p>
-              <p className="mt-4 text-xs text-cream/45">— {item.author}</p>
+              <p className="mt-4 text-xs text-navy/40">— {item.author}</p>
             </li>
           ))}
         </ul>
@@ -198,9 +198,9 @@ export function HomeView({ locale, dict, photos, seasonPhotos }: Props) {
       ) : null}
 
       <section id="book" className="relative z-20 mx-auto w-full max-w-xl scroll-mt-24 px-5 pb-20 sm:px-8">
-        <div className="rounded-[2rem] border border-cream/10 bg-navy/90 px-5 py-8 backdrop-blur-md sm:px-8 sm:py-10">
+        <div className="rounded-[2rem] border border-navy/10 bg-white/90 px-5 py-8 backdrop-blur-md sm:px-8 sm:py-10">
           <h2 className="mb-3 text-center font-serif text-2xl">{dict.bookTitle}</h2>
-          <p className="mx-auto mb-8 max-w-sm text-center text-sm leading-relaxed text-cream/65">
+          <p className="mx-auto mb-8 max-w-sm text-center text-sm leading-relaxed text-navy/60">
             {dict.bookBlurb}
           </p>
           <BookingForm dict={dict} />

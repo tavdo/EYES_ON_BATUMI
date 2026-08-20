@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#16202A",
+  themeColor: "#F7F2EA",
   width: "device-width",
   initialScale: 1,
 };
@@ -33,7 +33,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="ka"
       className={`${notoSans.variable} ${notoSerif.variable} h-full antialiased`}
     >
-      <body className="relative min-h-full bg-navy text-cream">
+      <body className="relative min-h-full bg-cream text-navy">
         <SceneBackground />
         <div className="relative z-10">{children}</div>
       </body>

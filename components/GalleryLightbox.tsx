@@ -46,7 +46,7 @@ export function GalleryLightbox({ photos, title, openLabel }: Props) {
             <button
               type="button"
               onClick={() => setOpenId(photo.id)}
-              className="group block w-full overflow-hidden rounded-2xl border border-cream/10 bg-black/20 text-left"
+              className="group block w-full overflow-hidden rounded-2xl border border-navy/10 bg-black/20 text-left"
             >
               <div className="aspect-[4/5]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -57,7 +57,7 @@ export function GalleryLightbox({ photos, title, openLabel }: Props) {
                 />
               </div>
               {photo.caption ? (
-                <p className="line-clamp-2 px-3 py-3 text-xs text-cream/70 sm:text-sm">
+                <p className="line-clamp-2 px-3 py-3 text-xs text-navy/65 sm:text-sm">
                   {photo.caption}
                 </p>
               ) : null}
@@ -75,7 +75,7 @@ export function GalleryLightbox({ photos, title, openLabel }: Props) {
             className="relative max-h-[90dvh] w-full max-w-4xl"
             onClick={(event) => event.stopPropagation()}
           >
-            <p className="mb-4 text-center text-sm text-cream/60">{title}</p>
+            <p className="mb-4 text-center text-sm text-navy/55">{title}</p>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={`/api/photos/${current.id}/preview`}
@@ -87,7 +87,7 @@ export function GalleryLightbox({ photos, title, openLabel }: Props) {
                 type="button"
                 disabled={openIndex <= 0}
                 onClick={() => setOpenId(photos[openIndex - 1].id)}
-                className="rounded-full border border-cream/20 px-4 py-2 text-sm disabled:opacity-40"
+                className="rounded-full border border-navy/20 px-4 py-2 text-sm disabled:opacity-40"
               >
                 ←
               </button>
@@ -101,7 +101,7 @@ export function GalleryLightbox({ photos, title, openLabel }: Props) {
                 type="button"
                 disabled={openIndex >= photos.length - 1}
                 onClick={() => setOpenId(photos[openIndex + 1].id)}
-                className="rounded-full border border-cream/20 px-4 py-2 text-sm disabled:opacity-40"
+                className="rounded-full border border-navy/20 px-4 py-2 text-sm disabled:opacity-40"
               >
                 →
               </button>

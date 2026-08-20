@@ -30,7 +30,7 @@ export function LanguageSwitcher({ locale }: { locale: Locale }) {
   }
 
   return (
-    <div className="fixed right-4 top-4 z-20 flex gap-1 rounded-full border border-cream/15 bg-navy/80 p-1 backdrop-blur-sm">
+    <div className="fixed right-4 top-4 z-20 flex gap-1 rounded-full border border-navy/15 bg-white/85 p-1 backdrop-blur-sm">
       {(["ka", "en", "ru"] as Locale[]).map((item) => (
         <button
           key={item}
@@ -40,7 +40,7 @@ export function LanguageSwitcher({ locale }: { locale: Locale }) {
           className={`h-8 min-w-10 rounded-full px-2 text-xs transition-colors ${
             item === locale
               ? "bg-terracotta font-medium text-navy"
-              : "text-cream/70 hover:text-cream"
+              : "text-navy/65 hover:text-navy"
           }`}
         >
           {LABELS[item]}

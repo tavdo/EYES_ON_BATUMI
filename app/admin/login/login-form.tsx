@@ -40,7 +40,7 @@ export function LoginForm() {
 
   return (
     <form onSubmit={onSubmit} className="flex w-full max-w-sm flex-col gap-5">
-      <label className="flex flex-col gap-2 text-sm text-cream/80">
+      <label className="flex flex-col gap-2 text-sm text-navy/75">
         პაროლი
         <input
           type="password"
@@ -49,7 +49,7 @@ export function LoginForm() {
           required
           value={password}
           onChange={(event) => setPassword(event.target.value)}
-          className="h-12 rounded-full border border-cream/20 bg-transparent px-5 text-cream outline-none transition-colors focus:border-terracotta"
+          className="h-12 rounded-full border border-navy/20 bg-transparent px-5 text-navy outline-none transition-colors focus:border-terracotta"
         />
       </label>
       {error ? <p className="text-sm text-terracotta">{error}</p> : null}

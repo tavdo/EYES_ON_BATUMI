@@ -2,8 +2,9 @@
 
 :root {
   --navy: #16202a;
-  --cream: #f4ede2;
+  --cream: #f7f2ea;
   --terracotta: #d97b4f;
+  --paper: #fffdf9;
 }
 
 @theme inline {
@@ -15,19 +16,19 @@
 }
 
 html {
-  background: var(--navy);
+  background: var(--cream);
   scroll-behavior: smooth;
 }
 
 body {
-  background: var(--navy);
-  color: var(--cream);
+  background: var(--cream);
+  color: var(--navy);
   font-family: var(--font-noto-sans), sans-serif;
 }
 
 ::selection {
   background: var(--terracotta);
-  color: var(--navy);
+  color: var(--paper);
 }
 
 input,
@@ -39,10 +40,10 @@ textarea {
 .field {
   height: 3rem;
   border-radius: 999px;
-  border: 1px solid rgba(244, 237, 226, 0.2);
-  background: transparent;
+  border: 1px solid rgba(22, 32, 42, 0.18);
+  background: rgba(255, 253, 249, 0.85);
   padding: 0 1.25rem;
-  color: var(--cream);
+  color: var(--navy);
   outline: none;
 }
 
@@ -52,8 +53,8 @@ textarea {
 
 select.field {
   appearance: none;
-  background-image: linear-gradient(45deg, transparent 50%, #f4ede2 50%),
-    linear-gradient(135deg, #f4ede2 50%, transparent 50%);
+  background-image: linear-gradient(45deg, transparent 50%, #16202a 50%),
+    linear-gradient(135deg, #16202a 50%, transparent 50%);
   background-position:
     calc(100% - 18px) 22px,
     calc(100% - 13px) 22px;
@@ -66,7 +67,7 @@ select.field {
 }
 
 input[type="date"].field {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 textarea.field {
@@ -90,16 +91,16 @@ textarea.field {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(1200px 700px at 18% 12%, rgba(217, 123, 79, 0.16), transparent 58%),
-    radial-gradient(900px 600px at 88% 82%, rgba(244, 237, 226, 0.08), transparent 55%),
-    linear-gradient(180deg, #121a22 0%, var(--navy) 45%, #101820 100%);
+    radial-gradient(1200px 700px at 18% 12%, rgba(217, 123, 79, 0.14), transparent 58%),
+    radial-gradient(900px 600px at 88% 82%, rgba(22, 32, 42, 0.04), transparent 55%),
+    linear-gradient(180deg, #fffdf9 0%, var(--cream) 48%, #f1e8db 100%);
 }
 
 .scene-orb {
   position: absolute;
   border-radius: 50%;
   filter: blur(40px);
-  opacity: 0.55;
+  opacity: 0.45;
   animation: orb-drift 18s ease-in-out infinite;
 }
 
@@ -108,7 +109,7 @@ textarea.field {
   height: min(42vw, 340px);
   left: -6%;
   top: 8%;
-  background: radial-gradient(circle, rgba(217, 123, 79, 0.55), transparent 68%);
+  background: radial-gradient(circle, rgba(217, 123, 79, 0.35), transparent 68%);
 }
 
 .scene-orb-b {
@@ -116,7 +117,7 @@ textarea.field {
   height: min(50vw, 420px);
   right: -10%;
   bottom: 4%;
-  background: radial-gradient(circle, rgba(244, 237, 226, 0.18), transparent 70%);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.7), transparent 70%);
   animation-delay: -7s;
 }
 
@@ -125,7 +126,7 @@ textarea.field {
   height: min(28vw, 220px);
   left: 42%;
   top: 58%;
-  background: radial-gradient(circle, rgba(217, 123, 79, 0.22), transparent 70%);
+  background: radial-gradient(circle, rgba(217, 123, 79, 0.18), transparent 70%);
   animation-delay: -12s;
   animation-duration: 22s;
 }
@@ -143,13 +144,13 @@ textarea.field {
 .scene-frame {
   position: absolute;
   overflow: hidden;
-  border: 1px solid rgba(244, 237, 226, 0.16);
-  background-color: #16202a;
+  border: 1px solid rgba(22, 32, 42, 0.12);
+  background-color: #fff;
   background-size: cover;
   background-position: center;
   box-shadow:
-    0 20px 50px rgba(0, 0, 0, 0.28),
-    inset 0 0 0 1px rgba(244, 237, 226, 0.04);
+    0 18px 40px rgba(22, 32, 42, 0.14),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.25);
   transform-style: preserve-3d;
   animation-name: frame-float;
   animation-timing-function: ease-in-out;
@@ -158,28 +159,28 @@ textarea.field {
 
 .scene-frame-reverse {
   animation-direction: reverse;
-  border-color: rgba(217, 123, 79, 0.28);
+  border-color: rgba(217, 123, 79, 0.35);
 }
 
 .scene-frame::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(160deg, rgba(22, 32, 42, 0.12), rgba(22, 32, 42, 0.38));
+  background: linear-gradient(160deg, rgba(255, 253, 249, 0.08), rgba(22, 32, 42, 0.12));
 }
 
 .scene-grain {
   position: absolute;
   inset: 0;
-  opacity: 0.09;
+  opacity: 0.05;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  mix-blend-mode: overlay;
+  mix-blend-mode: multiply;
 }
 
 .scene-vignette {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at center, transparent 42%, rgba(10, 14, 18, 0.55) 100%);
+  background: radial-gradient(ellipse at center, transparent 48%, rgba(241, 232, 219, 0.55) 100%);
 }
 
 .reveal {
@@ -210,8 +211,8 @@ textarea.field {
 
 .photo-plate img {
   box-shadow:
-    0 24px 60px rgba(0, 0, 0, 0.4),
-    0 0 0 1px rgba(244, 237, 226, 0.08);
+    0 24px 60px rgba(22, 32, 42, 0.18),
+    0 0 0 1px rgba(22, 32, 42, 0.06);
 }
 
 .btn-lift {
@@ -273,31 +274,31 @@ textarea.field {
 
   .scene-frame-keep {
     display: block;
-    opacity: 0.35;
+    opacity: 0.7;
   }
 
   .scene-frame-keep-tl {
-    width: 24vw;
-    height: 30vw;
-    left: -4% !important;
+    width: 28vw;
+    height: 36vw;
+    left: -2% !important;
     right: auto !important;
-    top: 2% !important;
-  }
-
-  .scene-frame-keep-tr {
-    width: 22vw;
-    height: 28vw;
-    left: auto !important;
-    right: -4% !important;
     top: 4% !important;
   }
 
+  .scene-frame-keep-tr {
+    width: 26vw;
+    height: 34vw;
+    left: auto !important;
+    right: -2% !important;
+    top: 7% !important;
+  }
+
   .scene-frame::after {
-    background: linear-gradient(160deg, rgba(22, 32, 42, 0.4), rgba(22, 32, 42, 0.7));
+    background: linear-gradient(160deg, rgba(255, 253, 249, 0.12), rgba(22, 32, 42, 0.1));
   }
 
   .scene-vignette {
-    background: radial-gradient(ellipse at center, rgba(16, 24, 32, 0.35) 28%, rgba(10, 14, 18, 0.72) 100%);
+    background: radial-gradient(ellipse at center, transparent 35%, rgba(241, 232, 219, 0.65) 100%);
   }
 }
 

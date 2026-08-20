@@ -26,8 +26,8 @@ export default async function AlbumPage({ params }: PageProps) {
   if (!data) {
     return (
       <main className="flex min-h-dvh flex-col items-center justify-center px-6 py-16">
-        <p className="mb-12 text-[11px] tracking-[0.28em] text-cream/55">eyes.on.batumi</p>
-        <p className="max-w-sm text-center font-serif text-xl leading-relaxed text-cream/90">
+        <p className="mb-12 text-[11px] tracking-[0.28em] text-navy/50">eyes.on.batumi</p>
+        <p className="max-w-sm text-center font-serif text-xl leading-relaxed text-navy/85">
           {dict.albumInvalid}
         </p>
       </main>
@@ -42,19 +42,19 @@ export default async function AlbumPage({ params }: PageProps) {
       <header className="mb-10 text-center">
         <Link
           href="/"
-          className="text-[11px] tracking-[0.28em] text-cream/55 transition-colors hover:text-cream"
+          className="text-[11px] tracking-[0.28em] text-navy/50 transition-colors hover:text-navy"
         >
           eyes.on.batumi
         </Link>
         <h1 className="mt-8 font-serif text-3xl">{album.title || dict.albumTitle}</h1>
-        <p className="mt-3 text-sm text-cream/60">
+        <p className="mt-3 text-sm text-navy/55">
           {photos.length} {dict.albumFrames}
         </p>
       </header>
 
       <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3">
         {photos.map((photo) => (
-          <li key={photo.id} className="overflow-hidden rounded-2xl border border-cream/10">
+          <li key={photo.id} className="overflow-hidden rounded-2xl border border-navy/10">
             <Link href={`/p/${photo.id}`} className="block">
               <div className="aspect-[4/5] bg-black/20">
                 {/* eslint-disable-next-line @next/next/no-img-element */}

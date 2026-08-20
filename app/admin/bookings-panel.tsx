@@ -54,34 +54,34 @@ export function BookingsPanel({ initialBookings }: { initialBookings: Booking[] 
   return (
     <section className="mb-14">
       <div className="mb-5 flex items-baseline justify-between">
-        <h2 className="text-sm tracking-wide text-cream/80">ჯავშნები</h2>
-        <p className="text-xs text-cream/45">
+        <h2 className="text-sm tracking-wide text-navy/75">ჯავშნები</h2>
+        <p className="text-xs text-navy/40">
           {fresh > 0 ? `${fresh} ახალი` : `${bookings.length} სულ`}
         </p>
       </div>
 
       {bookings.length === 0 ? (
-        <p className="text-sm text-cream/50">ჯავშანი ჯერ არ არის.</p>
+        <p className="text-sm text-navy/45">ჯავშანი ჯერ არ არის.</p>
       ) : (
         <ul className="flex flex-col gap-4">
           {bookings.map((booking) => (
             <li
               key={booking.id}
-              className="rounded-2xl border border-cream/10 px-4 py-4 sm:px-5"
+              className="rounded-2xl border border-navy/10 px-4 py-4 sm:px-5"
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <p className="font-medium">{booking.name}</p>
-                  <p className="mt-1 text-sm text-cream/65">
+                  <p className="mt-1 text-sm text-navy/60">
                     {formatWhen(booking.preferred_date)} · {TIME_LABEL[booking.time_of_day] ?? booking.time_of_day}
                   </p>
                 </div>
-                <span className="rounded-full border border-cream/20 px-3 py-1 text-xs text-cream/70">
+                <span className="rounded-full border border-navy/20 px-3 py-1 text-xs text-navy/65">
                   {STATUS_LABEL[booking.status]}
                 </span>
               </div>
 
-              <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm text-cream/75">
+              <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm text-navy/70">
                 <a href={`tel:${booking.phone.replace(/\s/g, "")}`} className="hover:text-terracotta">
                   {booking.phone}
                 </a>
@@ -98,7 +98,7 @@ export function BookingsPanel({ initialBookings }: { initialBookings: Booking[] 
               </div>
 
               {booking.message ? (
-                <p className="mt-3 text-sm leading-relaxed text-cream/70">{booking.message}</p>
+                <p className="mt-3 text-sm leading-relaxed text-navy/65">{booking.message}</p>
               ) : null}
 
               <div className="mt-4 flex flex-wrap gap-2">
@@ -111,7 +111,7 @@ export function BookingsPanel({ initialBookings }: { initialBookings: Booking[] 
                   })}
                   target="_blank"
                   rel="noreferrer"
-                  className="h-9 rounded-full border border-cream/20 px-4 text-sm text-cream/80 hover:border-terracotta hover:text-terracotta"
+                  className="h-9 rounded-full border border-navy/20 px-4 text-sm text-navy/75 hover:border-terracotta hover:text-terracotta"
                 >
                   WhatsApp
                 </a>
@@ -140,7 +140,7 @@ export function BookingsPanel({ initialBookings }: { initialBookings: Booking[] 
                     type="button"
                     disabled={busyId === booking.id}
                     onClick={() => void updateStatus(booking.id, "cancelled")}
-                    className="h-9 rounded-full border border-cream/20 px-4 text-sm text-cream/70 hover:border-terracotta hover:text-terracotta disabled:opacity-50"
+                    className="h-9 rounded-full border border-navy/20 px-4 text-sm text-navy/65 hover:border-terracotta hover:text-terracotta disabled:opacity-50"
                   >
                     გაუქმება
                   </button>

@@ -315,11 +315,11 @@ export function AdminDashboard({
     <div className="mx-auto w-full max-w-5xl px-5 py-10 sm:px-8 sm:py-12">
       <header className="mb-12 flex items-center justify-between gap-4">
         <div>
-          <p className="text-[11px] tracking-[0.28em] text-cream/55">eyes.on.batumi</p>
+          <p className="text-[11px] tracking-[0.28em] text-navy/50">eyes.on.batumi</p>
           <h1 className="mt-3 font-serif text-2xl">ადმინი</h1>
         </div>
         <form action="/api/admin/logout" method="post">
-          <button type="submit" className="text-sm text-cream/60 transition-colors hover:text-cream">
+          <button type="submit" className="text-sm text-navy/55 transition-colors hover:text-navy">
             გასვლა
           </button>
         </form>
@@ -330,7 +330,7 @@ export function AdminDashboard({
       <AdminAnalyticsPanel />
 
       <section className="mb-14">
-        <h2 className="mb-5 text-sm tracking-wide text-cream/80">ახალი ფოტოს ატვირთვა</h2>
+        <h2 className="mb-5 text-sm tracking-wide text-navy/75">ახალი ფოტოს ატვირთვა</h2>
         {onVercel && !useBlob ? (
           <p className="mb-4 text-sm text-terracotta">
             Vercel Blob is not connected.
@@ -358,7 +358,7 @@ export function AdminDashboard({
             }
           }}
           className={`flex min-h-44 cursor-pointer flex-col items-center justify-center rounded-2xl border border-dashed px-6 text-center transition-colors ${
-            dragging ? "border-terracotta bg-terracotta/10" : "border-cream/25"
+            dragging ? "border-terracotta bg-terracotta/10" : "border-navy/25"
           }`}
         >
           <input
@@ -371,10 +371,10 @@ export function AdminDashboard({
               if (event.target.files?.length) void uploadFiles(event.target.files);
             }}
           />
-          <span className="text-sm text-cream/80">
+          <span className="text-sm text-navy/75">
             {uploading ? "იტვირთება..." : "ჩააგდე ფოტოები ან შეეხე ასარჩევად"}
           </span>
-          <span className="mt-2 text-xs text-cream/45">
+          <span className="mt-2 text-xs text-navy/40">
             JPEG, PNG, WebP, HEIC · max 50MB · ერთ ატვირთვაზე 50 ფოტო · ფოლდერს Telegram კოდი მიენიჭება
           </span>
         </label>
@@ -386,9 +386,9 @@ export function AdminDashboard({
             onChange={(event) => setCaption(event.target.value)}
             placeholder="Short caption (optional)"
             maxLength={280}
-            className="h-11 flex-1 rounded-full border border-cream/20 bg-transparent px-5 text-sm outline-none transition-colors placeholder:text-cream/35 focus:border-terracotta"
+            className="h-11 flex-1 rounded-full border border-navy/20 bg-transparent px-5 text-sm outline-none transition-colors placeholder:text-navy/30 focus:border-terracotta"
           />
-          <label className="flex items-center gap-2 text-sm text-cream/70">
+          <label className="flex items-center gap-2 text-sm text-navy/65">
             <input
               type="checkbox"
               checked={expire}
@@ -397,7 +397,7 @@ export function AdminDashboard({
             />
             30 დღეში გაითიშოს
           </label>
-          <label className="flex items-center gap-2 text-sm text-cream/70">
+          <label className="flex items-center gap-2 text-sm text-navy/65">
             <input
               type="checkbox"
               checked={makePublic}
@@ -406,7 +406,7 @@ export function AdminDashboard({
             />
             გალერეაში გამოჩნდეს
           </label>
-          <label className="flex items-center gap-2 text-sm text-cream/70">
+          <label className="flex items-center gap-2 text-sm text-navy/65">
             <input
               type="checkbox"
               checked={watermark}
@@ -418,7 +418,7 @@ export function AdminDashboard({
           <select
             value={season}
             onChange={(event) => setSeason(event.target.value)}
-            className="h-11 rounded-full border border-cream/20 bg-transparent px-4 text-sm outline-none focus:border-terracotta"
+            className="h-11 rounded-full border border-navy/20 bg-transparent px-4 text-sm outline-none focus:border-terracotta"
           >
             <option value="">სეზონი</option>
             <option value="summer">ზაფხული</option>
@@ -434,9 +434,9 @@ export function AdminDashboard({
       </section>
 
       <section className="mb-14">
-        <h2 className="mb-5 text-sm tracking-wide text-cream/80">ფოლდერები · Telegram კოდები</h2>
+        <h2 className="mb-5 text-sm tracking-wide text-navy/75">ფოლდერები · Telegram კოდები</h2>
         {albums.length === 0 ? (
-          <p className="text-sm text-cream/50">
+          <p className="text-sm text-navy/45">
             ატვირთე ფოტოები — ავტომატურად შეიქმნება ფოლდერი და Telegram კოდი.
           </p>
         ) : (
@@ -448,14 +448,14 @@ export function AdminDashboard({
               return (
                 <li
                   key={album.id}
-                  className="rounded-2xl border border-cream/10 px-5 py-5"
+                  className="rounded-2xl border border-navy/10 px-5 py-5"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <p className="font-medium">
                         {album.title || "ფოლდერი"} · {album.photo_count} ფოტო
                       </p>
-                      <p className="mt-1 text-xs text-cream/45">{formatDate(album.created_at)}</p>
+                      <p className="mt-1 text-xs text-navy/40">{formatDate(album.created_at)}</p>
                     </div>
                     {code ? (
                       <span className="rounded-full bg-terracotta/15 px-3 py-1 font-mono text-sm text-terracotta">
@@ -477,7 +477,7 @@ export function AdminDashboard({
                       href={webUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="h-10 rounded-full border border-cream/20 text-center text-sm leading-10 text-cream/80 hover:border-terracotta hover:text-terracotta"
+                      className="h-10 rounded-full border border-navy/20 text-center text-sm leading-10 text-navy/75 hover:border-terracotta hover:text-terracotta"
                     >
                       საიტზე ნახვა
                     </a>
@@ -492,8 +492,8 @@ export function AdminDashboard({
       <section>
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h2 className="text-sm tracking-wide text-cream/80">ატვირთული ფოტოები</h2>
-            <p className="mt-1 text-xs text-cream/45">{photoCountLabel}</p>
+            <h2 className="text-sm tracking-wide text-navy/75">ატვირთული ფოტოები</h2>
+            <p className="mt-1 text-xs text-navy/40">{photoCountLabel}</p>
           </div>
           <div className="flex flex-wrap gap-2">
             {(["all", "public", "private", "expiring"] as const).map((item) => (
@@ -504,7 +504,7 @@ export function AdminDashboard({
                 className={`h-9 rounded-full px-3 text-xs ${
                   filter === item
                     ? "bg-terracotta text-navy"
-                    : "border border-cream/20 text-cream/70"
+                    : "border border-navy/20 text-navy/65"
                 }`}
               >
                 {item}
@@ -518,15 +518,15 @@ export function AdminDashboard({
           value={search}
           onChange={(event) => setSearch(event.target.value)}
           placeholder="ძებნა..."
-          className="mb-6 h-11 w-full rounded-full border border-cream/20 bg-transparent px-5 text-sm outline-none focus:border-terracotta"
+          className="mb-6 h-11 w-full rounded-full border border-navy/20 bg-transparent px-5 text-sm outline-none focus:border-terracotta"
         />
 
         {filteredPhotos.length === 0 ? (
-          <p className="text-sm text-cream/50">The list is empty.</p>
+          <p className="text-sm text-navy/45">The list is empty.</p>
         ) : (
           <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {filteredPhotos.map((photo) => (
-              <li key={photo.id} className="overflow-hidden rounded-2xl border border-cream/10">
+              <li key={photo.id} className="overflow-hidden rounded-2xl border border-navy/10">
                 <div className="aspect-[4/5] bg-black/20">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
@@ -536,20 +536,20 @@ export function AdminDashboard({
                   />
                 </div>
                 <div className="flex flex-col gap-3 p-4">
-                  <div className="flex items-start justify-between gap-3 text-xs text-cream/55">
+                  <div className="flex items-start justify-between gap-3 text-xs text-navy/50">
                     <span>{formatDate(photo.created_at)}</span>
                     <span>{photo.view_count} views</span>
                   </div>
-                  <p className="text-xs text-cream/45">
+                  <p className="text-xs text-navy/40">
                     {photo.is_public === 1 ? "გალერეაშია" : "პირადი ბმული"}
                     {photo.watermark === 1 ? " · watermark" : ""}
                     {photo.season ? ` · ${photo.season}` : ""}
                   </p>
                   {photo.caption ? (
-                    <p className="line-clamp-2 text-sm text-cream/80">{photo.caption}</p>
+                    <p className="line-clamp-2 text-sm text-navy/75">{photo.caption}</p>
                   ) : null}
                   {photo.expires_at ? (
-                    <p className="text-xs text-cream/40">
+                    <p className="text-xs text-navy/35">
                       {photo.expires_at <= Date.now()
                         ? "Expired"
                         : `Until ${formatDate(photo.expires_at)}`}
@@ -569,7 +569,7 @@ export function AdminDashboard({
                         type="button"
                         onClick={() => void removePhoto(photo.id)}
                         disabled={deletingId === photo.id}
-                        className="h-10 rounded-full border border-cream/20 px-4 text-sm text-cream/70 transition-colors hover:border-terracotta hover:text-terracotta disabled:opacity-50"
+                        className="h-10 rounded-full border border-navy/20 px-4 text-sm text-navy/65 transition-colors hover:border-terracotta hover:text-terracotta disabled:opacity-50"
                       >
                         წაშლა
                       </button>
@@ -578,7 +578,7 @@ export function AdminDashboard({
                       type="button"
                       onClick={() => void toggleWatermark(photo)}
                       disabled={publishingId === photo.id}
-                      className="h-10 rounded-full border border-cream/20 text-sm text-cream/80 transition-colors hover:border-terracotta hover:text-terracotta disabled:opacity-50"
+                      className="h-10 rounded-full border border-navy/20 text-sm text-navy/75 transition-colors hover:border-terracotta hover:text-terracotta disabled:opacity-50"
                     >
                       {photo.watermark === 1 ? "Watermark OFF" : "Watermark ON"}
                     </button>
@@ -586,7 +586,7 @@ export function AdminDashboard({
                       type="button"
                       onClick={() => void togglePublic(photo)}
                       disabled={publishingId === photo.id}
-                      className="h-10 rounded-full border border-cream/20 text-sm text-cream/80 transition-colors hover:border-terracotta hover:text-terracotta disabled:opacity-50"
+                      className="h-10 rounded-full border border-navy/20 text-sm text-navy/75 transition-colors hover:border-terracotta hover:text-terracotta disabled:opacity-50"
                     >
                       {photo.is_public === 1 ? "გალერეიდან მოხსნა" : "გალერეაში დამატება"}
                     </button>

@@ -45,10 +45,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 function InvalidLink({ message }: { message: string }) {
   return (
     <main className="flex min-h-dvh flex-col items-center justify-center px-6 py-16">
-      <p className="reveal mb-12 text-[11px] tracking-[0.28em] text-cream/55">
+      <p className="reveal mb-12 text-[11px] tracking-[0.28em] text-navy/50">
         eyes.on.batumi
       </p>
-      <p className="reveal reveal-delay max-w-sm text-center font-serif text-xl leading-relaxed text-cream/90">
+      <p className="reveal reveal-delay max-w-sm text-center font-serif text-xl leading-relaxed text-navy/85">
         {message}
       </p>
     </main>
@@ -72,7 +72,7 @@ export default async function PhotoPage({ params }: PageProps) {
       <header className="mb-12 text-center">
         <Link
           href="/"
-          className="reveal text-[11px] tracking-[0.28em] text-cream/55 transition-colors hover:text-cream"
+          className="reveal text-[11px] tracking-[0.28em] text-navy/50 transition-colors hover:text-navy"
         >
           eyes.on.batumi
         </Link>
@@ -80,7 +80,7 @@ export default async function PhotoPage({ params }: PageProps) {
           {dict.photoTitle}
         </h1>
         {photo.caption ? (
-          <p className="reveal reveal-delay-2 mt-4 text-sm leading-relaxed text-cream/70">
+          <p className="reveal reveal-delay-2 mt-4 text-sm leading-relaxed text-navy/65">
             {photo.caption}
           </p>
         ) : null}
@@ -106,13 +106,13 @@ export default async function PhotoPage({ params }: PageProps) {
         <PhotoActions dict={dict} photoId={photo.id} />
       </div>
 
-      <footer className="reveal reveal-delay-3 mt-16 pb-4 text-center text-[13px] leading-relaxed text-cream/55">
+      <footer className="reveal reveal-delay-3 mt-16 pb-4 text-center text-[13px] leading-relaxed text-navy/50">
         {dict.photoFooter.includes(SOCIAL_HANDLE) ? (
           <>
             {dict.photoFooter.split(SOCIAL_HANDLE)[0]}
             <Link
               href={INSTAGRAM_URL}
-              className="text-cream/80 underline decoration-cream/25 underline-offset-4 hover:text-terracotta"
+              className="text-navy/75 underline decoration-navy/25 underline-offset-4 hover:text-terracotta"
               target="_blank"
               rel="noreferrer"
             >

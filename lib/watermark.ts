@@ -30,7 +30,7 @@ export async function applyWatermark(buffer: Buffer) {
     const rowOffset = Math.floor(y / stepY) % 2 === 0 ? 0 : stepX / 2;
     for (let x = -cover; x < cover * 2; x += stepX) {
       texts.push(
-        `<text x="${x + rowOffset}" y="${y}" font-family="Arial, Helvetica, sans-serif" font-size="${fontSize}" font-weight="500" fill="rgba(244,237,226,0.28)">${label}</text>`,
+        `<text x="${x + rowOffset}" y="${y}" font-family="Arial, Helvetica, sans-serif" font-size="${fontSize}" font-weight="500" fill="rgba(255,253,249,0.32)">${label}</text>`,
       );
     }
   }
