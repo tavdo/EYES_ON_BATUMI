@@ -57,9 +57,9 @@ export const HOW_IT_WORKS = [
     titleKa: "მიიღე ბმული",
     titleEn: "Get your link",
     titleRu: "Получи ссылку",
-    bodyKa: "ფოტოს ბმული ტელეფონზე — ნახავ და ჩამოტვირთავ მაღალი ხარისხით.",
-    bodyEn: "Photo link on your phone — view and download full quality.",
-    bodyRu: "Ссылка на телефон — просмотр и скачивание в полном качестве.",
+    bodyKa: "ბმული საიტზე ან კოდი Telegram ბოტში — ჩამოტვირთავ მაღალი ხარისხით.",
+    bodyEn: "Site link or Telegram bot code — download full quality.",
+    bodyRu: "Ссылка на сайте или код в Telegram-боте — скачай в полном качестве.",
   },
 ];
 

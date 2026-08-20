@@ -19,6 +19,7 @@ export type Dictionary = {
   book: string;
   gallery: string;
   whatsapp: string;
+  telegram: string;
   howItWorksTitle: string;
   pricingTitle: string;
   pricingNote: string;
@@ -74,6 +75,7 @@ const dictionaries: Record<Locale, Dictionary> = {
     book: "დაჯავშნე",
     gallery: "გალერეა",
     whatsapp: "WhatsApp",
+    telegram: "Telegram",
     howItWorksTitle: "როგორ მუშაობს",
     pricingTitle: "ფასი",
     pricingNote: PRICING.noteKa,
@@ -122,6 +124,7 @@ const dictionaries: Record<Locale, Dictionary> = {
     book: "Book",
     gallery: "Gallery",
     whatsapp: "WhatsApp",
+    telegram: "Telegram",
     howItWorksTitle: "How it works",
     pricingTitle: "Pricing",
     pricingNote: PRICING.noteEn,
@@ -171,6 +174,7 @@ const dictionaries: Record<Locale, Dictionary> = {
     book: "Забронировать",
     gallery: "Галерея",
     whatsapp: "WhatsApp",
+    telegram: "Telegram",
     howItWorksTitle: "Как это работает",
     pricingTitle: "Цена",
     pricingNote: PRICING.noteRu,

@@ -11,7 +11,7 @@ import type { Dictionary, Locale } from "@/lib/i18n";
 import { getPricingLine, localizedField } from "@/lib/i18n";
 import type { Photo } from "@/lib/photos";
 import { HOW_IT_WORKS, LOCATIONS, TESTIMONIALS } from "@/lib/site-content";
-import { INSTAGRAM_URL, TIKTOK_URL } from "@/lib/social";
+import { INSTAGRAM_URL, TELEGRAM_BOT_URL, TIKTOK_URL } from "@/lib/social";
 
 type Props = {
   locale: Locale;
@@ -51,6 +51,14 @@ export function HomeView({ locale, dict, photos, seasonPhotos }: Props) {
               {dict.gallery}
             </a>
           ) : null}
+          <Link
+            href={TELEGRAM_BOT_URL}
+            className="rounded-full border border-cream/20 px-5 py-2.5 text-sm text-cream/80 transition-all hover:border-terracotta hover:text-terracotta"
+            target="_blank"
+            rel="noreferrer"
+          >
+            {dict.telegram}
+          </Link>
           <Link
             href={WHATSAPP_URL}
             className="rounded-full border border-cream/20 px-5 py-2.5 text-sm text-cream/80 transition-all hover:border-terracotta hover:text-terracotta"
@@ -195,7 +203,7 @@ export function HomeView({ locale, dict, photos, seasonPhotos }: Props) {
           {dict.bookBlurb}
         </p>
         <BookingForm dict={dict} />
-        <ContactLinks label={dict.contactDirect} />
+        <ContactLinks label={dict.contactDirect} telegramLabel={dict.telegram} />
       </section>
     </main>
   );
