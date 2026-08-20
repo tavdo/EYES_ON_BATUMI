@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
+import { deactivatePhoto, getPhotoById, setPhotoPublic, updatePhotoSettings } from "@/lib/photos";
 import { isAdminAuthenticated } from "@/lib/auth";
-import { deactivatePhoto, getPhotoById, setPhotoPublic } from "@/lib/photos";
 import { deleteStoredFiles } from "@/lib/storage";
+import type { Season } from "@/lib/site-content";
+
+const SEASONS = new Set(["summer", "autumn", "winter", "spring"]);
 
 export async function PATCH(
   request: Request,
@@ -12,20 +15,43 @@ export async function PATCH(
   }
 
   const { id } = await context.params;
-  let isPublic = false;
+  let body: {
+    isPublic?: boolean;
+    watermark?: boolean;
+    isFeatured?: boolean;
+    season?: string | null;
+  } = {};
+
   try {
-    const body = (await request.json()) as { isPublic?: boolean };
-    isPublic = body.isPublic === true;
+    body = (await request.json()) as typeof body;
   } catch {
     return NextResponse.json({ error: "არასწორი მოთხოვნა" }, { status: 400 });
   }
 
-  const updated = await setPhotoPublic(id, isPublic);
-  if (!updated) {
+  const season =
+    body.season === null
+      ? null
+      : typeof body.season === "string" && SEASONS.has(body.season)
+        ? (body.season as Season)
+        : undefined;
+
+  const updated = await updatePhotoSettings(id, {
+    isPublic: body.isPublic,
+    watermark: body.watermark,
+    isFeatured: body.isFeatured,
+    season,
+  });
+
+  if (!updated && body.isPublic !== undefined) {
+    const fallback = await setPhotoPublic(id, body.isPublic === true);
+    if (!fallback) {
+      return NextResponse.json({ error: "ფოტო ვერ მოიძებნა" }, { status: 404 });
+    }
+  } else if (!updated) {
     return NextResponse.json({ error: "ფოტო ვერ მოიძებნა" }, { status: 404 });
   }
 
-  return NextResponse.json({ ok: true, is_public: isPublic ? 1 : 0 });
+  return NextResponse.json({ ok: true });
 }
 
 export async function DELETE(

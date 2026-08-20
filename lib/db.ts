@@ -79,6 +79,76 @@ async function migrate() {
     ],
     "write",
   );
+
+  const photoInfo = await db.execute("PRAGMA table_info(photos)");
+  const photoColumns = new Set(photoInfo.rows.map((row) => String(row.name)));
+
+  if (!photoColumns.has("watermark")) {
+    await db.execute(
+      "ALTER TABLE photos ADD COLUMN watermark INTEGER NOT NULL DEFAULT 0",
+    );
+  }
+  if (!photoColumns.has("season")) {
+    await db.execute("ALTER TABLE photos ADD COLUMN season TEXT");
+  }
+  if (!photoColumns.has("is_featured")) {
+    await db.execute(
+      "ALTER TABLE photos ADD COLUMN is_featured INTEGER NOT NULL DEFAULT 0",
+    );
+  }
+
+  await db.batch(
+    [
+      `CREATE TABLE IF NOT EXISTS albums (
+        id TEXT PRIMARY KEY,
+        title TEXT,
+        created_at INTEGER NOT NULL,
+        expires_at INTEGER,
+        active INTEGER NOT NULL DEFAULT 1
+      )`,
+      `CREATE TABLE IF NOT EXISTS album_photos (
+        album_id TEXT NOT NULL,
+        photo_id TEXT NOT NULL,
+        position INTEGER NOT NULL DEFAULT 0,
+        PRIMARY KEY (album_id, photo_id)
+      )`,
+      `CREATE INDEX IF NOT EXISTS idx_albums_created_at ON albums (created_at DESC)`,
+      `CREATE TABLE IF NOT EXISTS analytics_events (
+        id TEXT PRIMARY KEY,
+        event_type TEXT NOT NULL,
+        target_id TEXT,
+        created_at INTEGER NOT NULL
+      )`,
+      `CREATE INDEX IF NOT EXISTS idx_analytics_created_at ON analytics_events (created_at DESC)`,
+      `CREATE INDEX IF NOT EXISTS idx_analytics_event_type ON analytics_events (event_type)`,
+      `CREATE TABLE IF NOT EXISTS telegram_photos (
+        code TEXT PRIMARY KEY,
+        file_id TEXT NOT NULL,
+        created_at INTEGER NOT NULL,
+        added_by INTEGER
+      )`,
+      `CREATE TABLE IF NOT EXISTS telegram_bookings (
+        id TEXT PRIMARY KEY,
+        telegram_user_id INTEGER NOT NULL,
+        telegram_username TEXT,
+        preferred_date TEXT NOT NULL,
+        location TEXT NOT NULL,
+        session_type TEXT NOT NULL,
+        contact TEXT NOT NULL,
+        status TEXT NOT NULL DEFAULT 'pending',
+        created_at INTEGER NOT NULL
+      )`,
+      `CREATE INDEX IF NOT EXISTS idx_tg_bookings_status ON telegram_bookings (status, created_at DESC)`,
+      `CREATE TABLE IF NOT EXISTS telegram_sessions (
+        chat_id INTEGER PRIMARY KEY,
+        flow TEXT NOT NULL,
+        step INTEGER NOT NULL,
+        data TEXT,
+        updated_at INTEGER NOT NULL
+      )`,
+    ],
+    "write",
+  );
 }
 
 export function ensureSchema() {

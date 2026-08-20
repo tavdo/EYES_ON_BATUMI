@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { Booking, BookingStatus } from "@/lib/bookings";
+import { bookingWhatsAppUrl } from "@/lib/contact";
 
 const TIME_LABEL: Record<string, string> = {
   morning: "დილა",
@@ -101,6 +102,19 @@ export function BookingsPanel({ initialBookings }: { initialBookings: Booking[] 
               ) : null}
 
               <div className="mt-4 flex flex-wrap gap-2">
+                <a
+                  href={bookingWhatsAppUrl({
+                    name: booking.name,
+                    preferredDate: booking.preferred_date,
+                    timeOfDay: TIME_LABEL[booking.time_of_day] ?? booking.time_of_day,
+                    phone: booking.phone,
+                  })}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="h-9 rounded-full border border-cream/20 px-4 text-sm text-cream/80 hover:border-terracotta hover:text-terracotta"
+                >
+                  WhatsApp
+                </a>
                 {booking.status === "new" ? (
                   <button
                     type="button"

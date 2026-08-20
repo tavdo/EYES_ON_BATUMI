@@ -12,8 +12,13 @@ export default async function AdminPage() {
     redirect("/admin/login");
   }
 
-  const photos = await listActivePhotos();
+  let photos: Awaited<ReturnType<typeof listActivePhotos>> = [];
   let bookings: Booking[] = [];
+  try {
+    photos = await listActivePhotos();
+  } catch {
+    photos = [];
+  }
   try {
     bookings = await listBookings();
   } catch {

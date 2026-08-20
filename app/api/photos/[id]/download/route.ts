@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { trackEvent } from "@/lib/analytics";
 import { getPhotoById, isPhotoAccessible } from "@/lib/photos";
 import { openStoredFile } from "@/lib/storage";
 
@@ -24,6 +25,7 @@ export async function GET(
 
   try {
     const file = await openStoredFile(photo.original_path);
+    void trackEvent("photo_download", photo.id);
     const encodedName = encodeURIComponent(photo.original_filename);
     const headers = new Headers({
       "Content-Type": file.contentType || photo.mime_type || "application/octet-stream",

@@ -1,9 +1,11 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { uploadPhotoToBlob } from "@/lib/client-upload";
 import type { Booking } from "@/lib/bookings";
 import type { Photo } from "@/lib/photos";
+import { QrButton } from "@/components/QrButton";
+import { AdminAnalyticsPanel } from "./analytics-panel";
 import { BookingsPanel } from "./bookings-panel";
 
 type Props = {
@@ -23,10 +25,15 @@ function formatDate(timestamp: number) {
 
 export function AdminDashboard({ initialPhotos, initialBookings, useBlob, onVercel }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const [origin, setOrigin] = useState("");
   const [photos, setPhotos] = useState(initialPhotos);
   const [caption, setCaption] = useState("");
   const [expire, setExpire] = useState(true);
   const [makePublic, setMakePublic] = useState(false);
+  const [watermark, setWatermark] = useState(false);
+  const [season, setSeason] = useState("");
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState<"all" | "public" | "private" | "expiring">("all");
   const [publishingId, setPublishingId] = useState<string | null>(null);
   const [dragging, setDragging] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -34,10 +41,54 @@ export function AdminDashboard({ initialPhotos, initialBookings, useBlob, onVerc
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
+  useEffect(() => {
+    setOrigin(window.location.origin);
+  }, []);
+
   const photoCountLabel = useMemo(() => {
     if (photos.length === 0) return "ფოტოები ჯერ არ არის";
     return `${photos.length} ფოტო`;
   }, [photos.length]);
+
+  const filteredPhotos = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    const week = Date.now() + 7 * 24 * 60 * 60 * 1000;
+    return photos.filter((photo) => {
+      if (filter === "public" && photo.is_public !== 1) return false;
+      if (filter === "private" && photo.is_public === 1) return false;
+      if (
+        filter === "expiring" &&
+        (photo.expires_at == null || photo.expires_at > week || photo.expires_at <= Date.now())
+      ) {
+        return false;
+      }
+      if (!query) return true;
+      return (
+        photo.id.toLowerCase().includes(query) ||
+        (photo.caption ?? "").toLowerCase().includes(query) ||
+        photo.original_filename.toLowerCase().includes(query)
+      );
+    });
+  }, [photos, search, filter]);
+
+  async function createAlbumFromPhotos(photoIds: string[]) {
+    if (photoIds.length < 2) return;
+    const response = await fetch("/api/admin/albums", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ photoIds, expire }),
+    });
+    const data = (await response.json()) as { albumId?: string; error?: string };
+    if (data.albumId) {
+      const url = `${window.location.origin}/a/${data.albumId}`;
+      setMessage(`ალბომი: ${url}`);
+      try {
+        await navigator.clipboard.writeText(url);
+      } catch {
+        // ignore
+      }
+    }
+  }
 
   async function uploadFiles(fileList: FileList | File[]) {
     const files = Array.from(fileList).filter((file) => file.size > 0);
@@ -66,6 +117,8 @@ export function AdminDashboard({ initialPhotos, initialBookings, useBlob, onVerc
                 caption: caption.trim() || null,
                 expire,
                 isPublic: makePublic,
+                watermark,
+                season: season || null,
               }),
             });
             const data = (await response.json()) as { photo?: Photo; error?: string };
@@ -83,6 +136,7 @@ export function AdminDashboard({ initialPhotos, initialBookings, useBlob, onVerc
           setPhotos((current) => [...uploaded, ...current]);
           setCaption("");
           setMakePublic(false);
+          void createAlbumFromPhotos(uploaded.map((photo) => photo.id));
         }
         if (errors.length) setMessage(errors.join(" · "));
         return;
@@ -93,6 +147,8 @@ export function AdminDashboard({ initialPhotos, initialBookings, useBlob, onVerc
       if (caption.trim()) formData.append("caption", caption.trim());
       formData.append("expire", expire ? "1" : "0");
       formData.append("isPublic", makePublic ? "1" : "0");
+      formData.append("watermark", watermark ? "1" : "0");
+      if (season) formData.append("season", season);
 
       const response = await fetch("/api/admin/upload", {
         method: "POST",
@@ -113,6 +169,7 @@ export function AdminDashboard({ initialPhotos, initialBookings, useBlob, onVerc
         setPhotos((current) => [...(data.photos ?? []), ...current]);
         setCaption("");
         setMakePublic(false);
+        void createAlbumFromPhotos((data.photos ?? []).map((photo) => photo.id));
       }
 
       if (data.errors?.length) {
@@ -162,6 +219,29 @@ export function AdminDashboard({ initialPhotos, initialBookings, useBlob, onVerc
     }
   }
 
+  async function toggleWatermark(photo: Photo) {
+    const next = photo.watermark !== 1;
+    setPublishingId(photo.id);
+    try {
+      const response = await fetch(`/api/admin/photos/${photo.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ watermark: next }),
+      });
+      if (!response.ok) {
+        setMessage("watermark update failed");
+        return;
+      }
+      setPhotos((current) =>
+        current.map((item) =>
+          item.id === photo.id ? { ...item, watermark: next ? 1 : 0 } : item,
+        ),
+      );
+    } finally {
+      setPublishingId(null);
+    }
+  }
+
   async function removePhoto(id: string) {
     if (!window.confirm("Deactivate this link?")) return;
     setDeletingId(id);
@@ -194,6 +274,8 @@ export function AdminDashboard({ initialPhotos, initialBookings, useBlob, onVerc
       </header>
 
       <BookingsPanel initialBookings={initialBookings} />
+
+      <AdminAnalyticsPanel />
 
       <section className="mb-14">
         <h2 className="mb-5 text-sm tracking-wide text-cream/80">ახალი ფოტოს ატვირთვა</h2>
@@ -270,22 +352,68 @@ export function AdminDashboard({ initialPhotos, initialBookings, useBlob, onVerc
             />
             გალერეაში გამოჩნდეს
           </label>
+          <label className="flex items-center gap-2 text-sm text-cream/70">
+            <input
+              type="checkbox"
+              checked={watermark}
+              onChange={(event) => setWatermark(event.target.checked)}
+              className="size-4 accent-terracotta"
+            />
+            წარწერა preview-ზე
+          </label>
+          <select
+            value={season}
+            onChange={(event) => setSeason(event.target.value)}
+            className="h-11 rounded-full border border-cream/20 bg-transparent px-4 text-sm outline-none focus:border-terracotta"
+          >
+            <option value="">სეზონი</option>
+            <option value="summer">ზაფხული</option>
+            <option value="autumn">შემოდგომა</option>
+            <option value="winter">ზამა</option>
+            <option value="spring">გაზაფხული</option>
+          </select>
         </div>
 
         {message ? <p className="mt-4 text-sm text-terracotta">{message}</p> : null}
       </section>
 
       <section>
-        <div className="mb-6 flex items-baseline justify-between">
-          <h2 className="text-sm tracking-wide text-cream/80">ატვირთული ფოტოები</h2>
-          <p className="text-xs text-cream/45">{photoCountLabel}</p>
+        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h2 className="text-sm tracking-wide text-cream/80">ატვირთული ფოტოები</h2>
+            <p className="mt-1 text-xs text-cream/45">{photoCountLabel}</p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {(["all", "public", "private", "expiring"] as const).map((item) => (
+              <button
+                key={item}
+                type="button"
+                onClick={() => setFilter(item)}
+                className={`h-9 rounded-full px-3 text-xs ${
+                  filter === item
+                    ? "bg-terracotta text-navy"
+                    : "border border-cream/20 text-cream/70"
+                }`}
+              >
+                {item}
+              </button>
+            ))}
+          </div>
         </div>
 
-        {photos.length === 0 ? (
+        <input
+          type="search"
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
+          placeholder="ძებნა..."
+          className="mb-6 h-11 w-full rounded-full border border-cream/20 bg-transparent px-5 text-sm outline-none focus:border-terracotta"
+        />
+
+        {filteredPhotos.length === 0 ? (
           <p className="text-sm text-cream/50">The list is empty.</p>
         ) : (
           <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {photos.map((photo) => (
+            {filteredPhotos.map((photo) => (
               <li key={photo.id} className="overflow-hidden rounded-2xl border border-cream/10">
                 <div className="aspect-[4/5] bg-black/20">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -302,6 +430,8 @@ export function AdminDashboard({ initialPhotos, initialBookings, useBlob, onVerc
                   </div>
                   <p className="text-xs text-cream/45">
                     {photo.is_public === 1 ? "გალერეაშია" : "პირადი ბმული"}
+                    {photo.watermark === 1 ? " · watermark" : ""}
+                    {photo.season ? ` · ${photo.season}` : ""}
                   </p>
                   {photo.caption ? (
                     <p className="line-clamp-2 text-sm text-cream/80">{photo.caption}</p>
@@ -320,8 +450,9 @@ export function AdminDashboard({ initialPhotos, initialBookings, useBlob, onVerc
                         onClick={() => void copyLink(photo.id)}
                         className="h-10 flex-1 rounded-full bg-terracotta text-sm font-medium text-navy transition-opacity hover:opacity-90"
                       >
-                        {copiedId === photo.id ? "კოპირებულია" : "ბმულის კოპირება"}
+                        {copiedId === photo.id ? "კოპირებულია" : "ბმული"}
                       </button>
+                      <QrButton url={`${origin}/p/${photo.id}`} label="QR" />
                       <button
                         type="button"
                         onClick={() => void removePhoto(photo.id)}
@@ -331,6 +462,14 @@ export function AdminDashboard({ initialPhotos, initialBookings, useBlob, onVerc
                         წაშლა
                       </button>
                     </div>
+                    <button
+                      type="button"
+                      onClick={() => void toggleWatermark(photo)}
+                      disabled={publishingId === photo.id}
+                      className="h-10 rounded-full border border-cream/20 text-sm text-cream/80 transition-colors hover:border-terracotta hover:text-terracotta disabled:opacity-50"
+                    >
+                      {photo.watermark === 1 ? "Watermark OFF" : "Watermark ON"}
+                    </button>
                     <button
                       type="button"
                       onClick={() => void togglePublic(photo)}

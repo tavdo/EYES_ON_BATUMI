@@ -23,6 +23,8 @@ export async function POST(request: Request) {
     caption?: string | null;
     expire?: boolean;
     isPublic?: boolean;
+    watermark?: boolean;
+    season?: string | null;
   };
 
   try {
@@ -74,6 +76,12 @@ export async function POST(request: Request) {
     caption,
     expiresAt: body.expire === false ? null : Date.now() + THIRTY_DAYS_MS,
     isPublic: body.isPublic === true,
+    watermark: body.watermark === true,
+    season:
+      typeof body.season === "string" &&
+      ["summer", "autumn", "winter", "spring"].includes(body.season)
+        ? (body.season as "summer" | "autumn" | "winter" | "spring")
+        : null,
   });
 
   return NextResponse.json({ photo });

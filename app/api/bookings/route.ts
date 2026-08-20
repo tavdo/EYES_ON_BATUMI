@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
+import { trackEvent } from "@/lib/analytics";
 import { createBooking, isBookingTime } from "@/lib/bookings";
+import { notifyNewBooking } from "@/lib/notify";
 
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const PHONE_PATTERN = /^[+\d][\d\s()-]{6,20}$/;
@@ -49,6 +51,15 @@ export async function POST(request: Request) {
 
   try {
     await createBooking({
+      name,
+      phone,
+      instagram,
+      preferredDate,
+      timeOfDay,
+      message,
+    });
+    await trackEvent("booking_submit");
+    void notifyNewBooking({
       name,
       phone,
       instagram,

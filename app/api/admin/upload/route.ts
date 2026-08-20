@@ -42,6 +42,13 @@ export async function POST(request: Request) {
   const expire = formData.get("expire") !== "0";
   const expiresAt = expire ? Date.now() + THIRTY_DAYS_MS : null;
   const isPublic = formData.get("isPublic") === "1";
+  const watermark = formData.get("watermark") === "1";
+  const seasonRaw = formData.get("season");
+  const season =
+    typeof seasonRaw === "string" &&
+    ["summer", "autumn", "winter", "spring"].includes(seasonRaw)
+      ? (seasonRaw as "summer" | "autumn" | "winter" | "spring")
+      : null;
 
   const photos = [];
   const errors: { filename: string; error: string }[] = [];
@@ -75,6 +82,8 @@ export async function POST(request: Request) {
         caption,
         expiresAt,
         isPublic,
+        watermark,
+        season,
       });
 
       if (photo) photos.push(photo);

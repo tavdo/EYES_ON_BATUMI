@@ -1,9 +1,9 @@
 import { PHONES, telUrl, whatsappUrl } from "@/lib/contact";
 
-export function ContactLinks() {
+export function ContactLinks({ label }: { label?: string }) {
   return (
     <div className="mt-10 border-t border-cream/10 pt-8 text-center">
-      <p className="mb-4 text-sm text-cream/60">ან დაგვიკავშირდი პირდაპირ</p>
+      <p className="mb-4 text-sm text-cream/60">{label ?? "ან დაგვიკავშირდი პირდაპირ"}</p>
       <div className="flex flex-col gap-3">
         {PHONES.map((phone) => (
           <div
