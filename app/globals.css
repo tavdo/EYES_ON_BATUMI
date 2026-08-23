@@ -310,6 +310,14 @@ textarea.field {
   }
 }
 
+body:has(.admin-shell) {
+  background: var(--cream);
+}
+
+body:has(.admin-shell) .scene {
+  display: none;
+}
+
 .voucher-capture {
   width: 100%;
 }
