@@ -30,7 +30,7 @@ export function LanguageSwitcher({ locale }: { locale: Locale }) {
   }
 
   return (
-    <div className="fixed right-4 top-4 z-20 flex gap-1 rounded-full border border-navy/20 bg-white/95 p-1 shadow-sm backdrop-blur-sm">
+    <div className="fixed right-3 top-[max(0.75rem,env(safe-area-inset-top))] z-30 flex gap-1 rounded-full border border-navy/20 bg-white/95 p-1 shadow-sm backdrop-blur-sm sm:right-4 sm:top-4">
       {(["ka", "en", "ru"] as Locale[]).map((item) => (
         <button
           key={item}

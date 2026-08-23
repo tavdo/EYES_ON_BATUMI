@@ -23,6 +23,7 @@ const hokusai = localFont({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.eyesonbatumi.ge"),
   title: "eyes.on.batumi",
   description: "ქუჩის პორტრეტები ბათუმში",
   robots: { index: false, follow: false, nocache: true },

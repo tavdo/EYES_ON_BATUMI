@@ -318,11 +318,16 @@ export function AdminDashboard({
           <p className="text-[11px] tracking-[0.28em] text-navy/50">eyes.on.batumi</p>
           <h1 className="mt-3 font-serif text-2xl">ადმინი</h1>
         </div>
-        <form action="/api/admin/logout" method="post">
-          <button type="submit" className="text-sm text-navy/55 transition-colors hover:text-navy">
-            გასვლა
-          </button>
-        </form>
+        <div className="flex items-center gap-4">
+          <a href="/admin/vouchers" className="text-sm text-navy/55 transition-colors hover:text-navy">
+            ვაუჩერები
+          </a>
+          <form action="/api/admin/logout" method="post">
+            <button type="submit" className="text-sm text-navy/55 transition-colors hover:text-navy">
+              გასვლა
+            </button>
+          </form>
+        </div>
       </header>
 
       <BookingsPanel initialBookings={initialBookings} />

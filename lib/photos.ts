@@ -56,6 +56,14 @@ export function isPhotoAccessible(photo: Photo) {
   return true;
 }
 
+export function toClientPhoto(photo: Photo): Photo {
+  return {
+    ...photo,
+    original_path: "",
+    thumb_path: "",
+  };
+}
+
 export async function getPhotoById(id: string) {
   await ensureSchema();
   const result = await getTurso().execute({

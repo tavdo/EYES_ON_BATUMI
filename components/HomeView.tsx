@@ -26,35 +26,35 @@ export function HomeView({ locale, dict, photos, seasonPhotos }: Props) {
       <AnalyticsBeacon event="home_view" />
       <LanguageSwitcher locale={locale} />
 
-      <section className="flex min-h-dvh flex-col items-center justify-center px-6 py-16">
-        <div className="relative z-10 flex max-w-xl flex-col items-center text-center">
-          <p className="text-glow reveal mb-10 text-[11px] font-medium tracking-[0.32em] text-navy/80">
+      <section className="flex min-h-[88svh] flex-col items-center justify-center px-5 pb-12 pt-24 sm:min-h-dvh sm:px-6 sm:py-16">
+        <div className="relative z-10 flex w-full max-w-xl flex-col items-center rounded-[2rem] bg-cream/80 px-4 py-8 text-center backdrop-blur-md sm:bg-transparent sm:px-0 sm:py-0 sm:backdrop-blur-none">
+          <p className="text-glow reveal mb-6 text-[11px] font-medium tracking-[0.28em] text-navy/80 sm:mb-10 sm:tracking-[0.32em]">
             {dict.tagline}
           </p>
-          <h1 className="font-display text-glow reveal reveal-delay text-center text-5xl font-normal tracking-[0.06em] text-navy sm:text-6xl">
+          <h1 className="font-display text-glow reveal reveal-delay text-center text-[2.15rem] leading-[1.12] font-normal tracking-[0.04em] text-navy sm:text-6xl sm:leading-none sm:tracking-[0.06em]">
             eyes.on.batumi
           </h1>
-          <p className="text-glow reveal reveal-delay-2 mt-6 max-w-xs text-center font-serif text-lg leading-relaxed text-navy">
+          <p className="text-glow reveal reveal-delay-2 mt-5 max-w-xs text-center font-serif text-base leading-relaxed text-navy sm:mt-6 sm:text-lg">
             {dict.heroSubtitle}
           </p>
-          <div className="reveal reveal-delay-3 mt-14 flex flex-wrap items-center justify-center gap-3">
+          <div className="reveal reveal-delay-3 mt-8 grid w-full max-w-sm grid-cols-2 gap-2.5 sm:mt-14 sm:flex sm:max-w-none sm:flex-wrap sm:items-center sm:justify-center sm:gap-3">
             <a
               href="#book"
-              className="rounded-full bg-terracotta px-5 py-2.5 text-sm font-semibold text-navy transition-opacity hover:opacity-90"
+              className="col-span-2 rounded-full bg-terracotta px-5 py-3 text-sm font-semibold text-navy transition-opacity hover:opacity-90 sm:col-span-1 sm:py-2.5"
             >
               {dict.book}
             </a>
             {photos.length > 0 ? (
               <a
                 href="#gallery"
-                className="rounded-full border border-navy/25 bg-white/85 px-5 py-2.5 text-sm font-medium text-navy shadow-sm backdrop-blur-sm transition-all hover:border-terracotta hover:text-terracotta"
+                className="rounded-full border border-navy/25 bg-white px-4 py-3 text-sm font-medium text-navy shadow-sm sm:bg-white/85 sm:px-5 sm:py-2.5 sm:backdrop-blur-sm sm:transition-all sm:hover:border-terracotta sm:hover:text-terracotta"
               >
                 {dict.gallery}
               </a>
             ) : null}
             <Link
               href={TELEGRAM_BOT_URL}
-              className="rounded-full border border-navy/25 bg-white/85 px-5 py-2.5 text-sm font-medium text-navy shadow-sm backdrop-blur-sm transition-all hover:border-terracotta hover:text-terracotta"
+              className="rounded-full border border-navy/25 bg-white px-4 py-3 text-sm font-medium text-navy shadow-sm sm:bg-white/85 sm:px-5 sm:py-2.5 sm:backdrop-blur-sm sm:transition-all sm:hover:border-terracotta sm:hover:text-terracotta"
               target="_blank"
               rel="noreferrer"
             >
@@ -62,7 +62,7 @@ export function HomeView({ locale, dict, photos, seasonPhotos }: Props) {
             </Link>
             <Link
               href={WHATSAPP_URL}
-              className="rounded-full border border-navy/25 bg-white/85 px-5 py-2.5 text-sm font-medium text-navy shadow-sm backdrop-blur-sm transition-all hover:border-terracotta hover:text-terracotta"
+              className="rounded-full border border-navy/25 bg-white px-4 py-3 text-sm font-medium text-navy shadow-sm sm:bg-white/85 sm:px-5 sm:py-2.5 sm:backdrop-blur-sm sm:transition-all sm:hover:border-terracotta sm:hover:text-terracotta"
               target="_blank"
               rel="noreferrer"
             >
@@ -70,7 +70,7 @@ export function HomeView({ locale, dict, photos, seasonPhotos }: Props) {
             </Link>
             <Link
               href={INSTAGRAM_URL}
-              className="rounded-full border border-navy/25 bg-white/85 px-5 py-2.5 text-sm font-medium text-navy shadow-sm backdrop-blur-sm transition-all hover:border-terracotta hover:text-terracotta"
+              className="rounded-full border border-navy/25 bg-white px-4 py-3 text-sm font-medium text-navy shadow-sm sm:bg-white/85 sm:px-5 sm:py-2.5 sm:backdrop-blur-sm sm:transition-all sm:hover:border-terracotta sm:hover:text-terracotta"
               target="_blank"
               rel="noreferrer"
             >
@@ -78,7 +78,7 @@ export function HomeView({ locale, dict, photos, seasonPhotos }: Props) {
             </Link>
             <Link
               href={TIKTOK_URL}
-              className="rounded-full border border-navy/25 bg-white/85 px-5 py-2.5 text-sm font-medium text-navy shadow-sm backdrop-blur-sm transition-all hover:border-terracotta hover:text-terracotta"
+              className="rounded-full border border-navy/25 bg-white px-4 py-3 text-sm font-medium text-navy shadow-sm sm:bg-white/85 sm:px-5 sm:py-2.5 sm:backdrop-blur-sm sm:transition-all sm:hover:border-terracotta sm:hover:text-terracotta"
               target="_blank"
               rel="noreferrer"
             >

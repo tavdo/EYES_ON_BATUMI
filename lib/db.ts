@@ -146,6 +146,15 @@ async function migrate() {
         data TEXT,
         updated_at INTEGER NOT NULL
       )`,
+      `CREATE TABLE IF NOT EXISTS vouchers (
+        code TEXT PRIMARY KEY,
+        locale TEXT NOT NULL,
+        recipient TEXT NOT NULL,
+        issued_on TEXT NOT NULL,
+        expires_on TEXT NOT NULL,
+        created_at INTEGER NOT NULL
+      )`,
+      `CREATE INDEX IF NOT EXISTS idx_vouchers_created_at ON vouchers (created_at DESC)`,
     ],
     "write",
   );

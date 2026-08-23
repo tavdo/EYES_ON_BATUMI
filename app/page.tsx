@@ -1,6 +1,6 @@
 import { HomeView } from "@/components/HomeView";
 import { getDictionary, getLocaleFromCookies } from "@/lib/i18n/server";
-import { listPublicPhotos, listSeasonPhotos, type Photo } from "@/lib/photos";
+import { listPublicPhotos, listSeasonPhotos, toClientPhoto, type Photo } from "@/lib/photos";
 import { ACTIVE_SEASON } from "@/lib/site-content";
 
 export const dynamic = "force-dynamic";
@@ -13,8 +13,8 @@ export default async function HomePage() {
   let seasonPhotos: Photo[] = [];
   try {
     [photos, seasonPhotos] = await Promise.all([
-      listPublicPhotos(),
-      listSeasonPhotos(ACTIVE_SEASON),
+      listPublicPhotos().then((items) => items.map(toClientPhoto)),
+      listSeasonPhotos(ACTIVE_SEASON).then((items) => items.map(toClientPhoto)),
     ]);
   } catch {
     photos = [];
