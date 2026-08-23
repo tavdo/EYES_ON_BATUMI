@@ -1,1 +1,2 @@
-export const GOOGLE_SITE_VERIFICATION = "";
+export const GOOGLE_SITE_VERIFICATION =
+  "0zyBhptks1XjZDdXEnSTRCEK3jUBE6OXKsLWiKpq8Qs";
