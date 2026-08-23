@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Noto_Sans_Georgian, Noto_Serif_Georgian } from "next/font/google";
 import localFont from "next/font/local";
 import { SceneBackground } from "@/components/SceneBackground";
+import { GOOGLE_SITE_VERIFICATION } from "@/lib/google-verification";
 import { SEO, SITE_NAME } from "@/lib/seo";
 import { siteUrl } from "@/lib/site-url";
 import "./globals.css";
@@ -52,8 +53,8 @@ export const metadata: Metadata = {
     description: SEO.description,
   },
   category: "photography",
-  verification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
-    ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
+  verification: GOOGLE_SITE_VERIFICATION
+    ? { google: GOOGLE_SITE_VERIFICATION }
     : undefined,
 };
 

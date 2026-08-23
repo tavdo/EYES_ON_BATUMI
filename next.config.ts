@@ -22,6 +22,12 @@ const nextConfig: NextConfig = {
       ],
     },
   ],
+  rewrites: async () => [
+    {
+      source: "/google:code.html",
+      destination: "/api/google-verify/:code",
+    },
+  ],
 };
 
 export default nextConfig;
