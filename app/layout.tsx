@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Noto_Sans_Georgian, Noto_Serif_Georgian } from "next/font/google";
 import localFont from "next/font/local";
 import { SceneBackground } from "@/components/SceneBackground";
+import { SEO, SITE_NAME } from "@/lib/seo";
+import { siteUrl } from "@/lib/site-url";
 import "./globals.css";
 
 const notoSans = Noto_Sans_Georgian({
@@ -23,10 +25,33 @@ const hokusai = localFont({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.eyesonbatumi.ge"),
-  title: "eyes.on.batumi",
-  description: "ქუჩის პორტრეტები ბათუმში",
-  robots: { index: false, follow: false, nocache: true },
+  metadataBase: new URL(siteUrl()),
+  title: {
+    default: SEO.title,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: SEO.description,
+  keywords: SEO.keywords,
+  applicationName: SITE_NAME,
+  authors: [{ name: SITE_NAME, url: siteUrl() }],
+  creator: SITE_NAME,
+  alternates: { canonical: "/" },
+  robots: { index: true, follow: true },
+  openGraph: {
+    type: "website",
+    locale: "ka_GE",
+    alternateLocale: ["en_US", "ru_RU"],
+    url: siteUrl(),
+    siteName: SITE_NAME,
+    title: SEO.title,
+    description: SEO.description,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SEO.title,
+    description: SEO.description,
+  },
+  category: "photography",
 };
 
 export const viewport: Viewport = {

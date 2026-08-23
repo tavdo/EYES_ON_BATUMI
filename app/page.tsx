@@ -1,9 +1,17 @@
 import { HomeView } from "@/components/HomeView";
+import { JsonLd } from "@/components/JsonLd";
 import { getDictionary, getLocaleFromCookies } from "@/lib/i18n/server";
 import { listPublicPhotos, listSeasonPhotos, toClientPhoto, type Photo } from "@/lib/photos";
+import { SEO } from "@/lib/seo";
 import { ACTIVE_SEASON } from "@/lib/site-content";
 
 export const dynamic = "force-dynamic";
+
+export const metadata = {
+  title: { absolute: SEO.title },
+  description: SEO.description,
+  alternates: { canonical: "/" },
+};
 
 export default async function HomePage() {
   const locale = await getLocaleFromCookies();
@@ -22,11 +30,14 @@ export default async function HomePage() {
   }
 
   return (
-    <HomeView
-      locale={locale}
-      dict={dict}
-      photos={photos}
-      seasonPhotos={seasonPhotos}
-    />
+    <>
+      <JsonLd />
+      <HomeView
+        locale={locale}
+        dict={dict}
+        photos={photos}
+        seasonPhotos={seasonPhotos}
+      />
+    </>
   );
 }

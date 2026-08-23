@@ -225,6 +225,30 @@ export function HomeView({ locale, dict, photos, seasonPhotos }: Props) {
           <ContactLinks label={dict.contactDirect} telegramLabel={dict.telegram} />
         </div>
       </section>
+
+      <footer className="relative z-10 border-t border-navy/10 bg-white/80 px-5 py-10 text-center text-sm text-navy/70">
+        <p className="font-serif text-base text-navy">eyes.on.batumi</p>
+        <p className="mt-2">ქუჩის პორტრეტები · ბათუმი, საქართველო</p>
+        <p className="mt-1">Street portraits · Batumi, Georgia</p>
+        <p className="mt-3">
+          <a className="underline decoration-navy/20 underline-offset-4" href="tel:+995550050443">
+            +995 550 05 04 43
+          </a>
+          <span className="mx-2">·</span>
+          <a className="underline decoration-navy/20 underline-offset-4" href="tel:+995568002517">
+            +995 568 00 25 17
+          </a>
+        </p>
+        <p className="mt-3">
+          <a className="underline decoration-navy/20 underline-offset-4" href={INSTAGRAM_URL}>
+            Instagram
+          </a>
+          <span className="mx-2">·</span>
+          <a className="underline decoration-navy/20 underline-offset-4" href={TIKTOK_URL}>
+            TikTok
+          </a>
+        </p>
+      </footer>
     </main>
   );
 }
