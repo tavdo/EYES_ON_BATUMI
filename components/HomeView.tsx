@@ -31,7 +31,7 @@ export function HomeView({ locale, dict, photos, seasonPhotos }: Props) {
           <p className="text-glow reveal mb-10 text-[11px] font-medium tracking-[0.32em] text-navy/80">
             {dict.tagline}
           </p>
-          <h1 className="text-glow reveal reveal-delay text-center text-4xl font-semibold tracking-[0.1em] text-navy sm:text-5xl">
+          <h1 className="font-display text-glow reveal reveal-delay text-center text-5xl font-normal tracking-[0.06em] text-navy sm:text-6xl">
             eyes.on.batumi
           </h1>
           <p className="text-glow reveal reveal-delay-2 mt-6 max-w-xs text-center font-serif text-lg leading-relaxed text-navy">

@@ -13,6 +13,7 @@
   --color-terracotta: var(--terracotta);
   --font-sans: var(--font-noto-sans);
   --font-serif: var(--font-noto-serif);
+  --font-display: var(--font-hokusai);
 }
 
 html {
