@@ -10,6 +10,11 @@ export type VoucherCopy = {
   validUntil: string;
   delivery: string;
   book: string;
+  pageEyebrow: string;
+  pageBook: string;
+  pageWhatsapp: string;
+  pageExpired: string;
+  pageInvalid: string;
 };
 
 export const VOUCHER_COPY: Record<VoucherLocale, VoucherCopy> = {
@@ -23,6 +28,11 @@ export const VOUCHER_COPY: Record<VoucherLocale, VoucherCopy> = {
     validUntil: "ვადა იწურება:",
     delivery: "მიწოდება: პირადი ციფრული გალერეა და წვდომა Telegram-ით.",
     book: "დაჯავშნა: eyesonbatumi.ge",
+    pageEyebrow: "ონლაინ სასაჩუქრე ვაუჩერი",
+    pageBook: "დაჯავშნე ამ ვაუჩერით",
+    pageWhatsapp: "WhatsApp-ით დაჯავშნა",
+    pageExpired: "ამ ვაუჩერის ვადა ამოიწურა.",
+    pageInvalid: "ეს ბმული აღარ მოქმედებს ან კოდი არასწორია.",
   },
   en: {
     tagline: "STREET PORTRAIT PHOTOGRAPHER",
@@ -34,6 +44,11 @@ export const VOUCHER_COPY: Record<VoucherLocale, VoucherCopy> = {
     validUntil: "VALID UNTIL:",
     delivery: "DELIVERY: PRIVATE DIGITAL GALLERY & TELEGRAM ACCESS.",
     book: "BOOK VIA: eyesonbatumi.ge",
+    pageEyebrow: "Online gift voucher",
+    pageBook: "Book with this voucher",
+    pageWhatsapp: "Book on WhatsApp",
+    pageExpired: "This voucher has expired.",
+    pageInvalid: "This link is invalid or the voucher was removed.",
   },
   ru: {
     tagline: "УЛИЧНЫЙ ПОРТРЕТНЫЙ ФОТОГРАФ",
@@ -45,5 +60,10 @@ export const VOUCHER_COPY: Record<VoucherLocale, VoucherCopy> = {
     validUntil: "ДЕЙСТВИТЕЛЕН ДО:",
     delivery: "ДОСТАВКА: ЛИЧНАЯ ЦИФРОВАЯ ГАЛЕРЕЯ И TELEGRAM.",
     book: "БРОНЬ: eyesonbatumi.ge",
+    pageEyebrow: "Онлайн подарочный ваучер",
+    pageBook: "Забронировать по ваучеру",
+    pageWhatsapp: "Забронировать в WhatsApp",
+    pageExpired: "Срок этого ваучера истёк.",
+    pageInvalid: "Ссылка недействительна или ваучер удалён.",
   },
 };

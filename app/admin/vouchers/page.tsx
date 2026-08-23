@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { isAdminAuthenticated } from "@/lib/auth";
 import { listActivePhotos } from "@/lib/photos";
+import { siteUrl } from "@/lib/site-url";
 import { listVouchers, nextVoucherCode } from "@/lib/vouchers";
 import { VoucherStudio } from "./studio";
 
@@ -29,6 +30,11 @@ export default async function AdminVouchersPage() {
   }
 
   return (
-    <VoucherStudio initialCode={initialCode} initialVouchers={vouchers} photos={photos} />
+    <VoucherStudio
+      initialCode={initialCode}
+      initialVouchers={vouchers}
+      photos={photos}
+      origin={siteUrl()}
+    />
   );
 }

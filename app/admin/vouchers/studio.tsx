@@ -1,14 +1,16 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
+import { CopyLinkButton } from "@/components/CopyLinkButton";
 import { VoucherCertificate } from "@/components/VoucherCertificate";
 import { VOUCHER_COPY, type VoucherLocale } from "@/lib/voucher-copy";
-import type { Voucher } from "@/lib/vouchers";
+import { voucherPath, type Voucher } from "@/lib/vouchers";
 
 type Props = {
   initialCode: string;
   initialVouchers: Voucher[];
   photos: string[];
+  origin: string;
 };
 
 function todayIso() {
@@ -21,7 +23,7 @@ function plusYearIso() {
   return date.toISOString().slice(0, 10);
 }
 
-export function VoucherStudio({ initialCode, initialVouchers, photos }: Props) {
+export function VoucherStudio({ initialCode, initialVouchers, photos, origin }: Props) {
   const sheetRef = useRef<HTMLDivElement>(null);
   const [locale, setLocale] = useState<VoucherLocale>("ka");
   const [recipient, setRecipient] = useState("");
@@ -31,13 +33,20 @@ export function VoucherStudio({ initialCode, initialVouchers, photos }: Props) {
   const [vouchers, setVouchers] = useState(initialVouchers);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
+  const [savedCode, setSavedCode] = useState<string | null>(
+    initialVouchers[0]?.code ?? null,
+  );
 
   const copy = VOUCHER_COPY[locale];
+  const liveCode = savedCode ?? code.trim().toUpperCase();
+  const publicUrl = `${origin}${voucherPath(liveCode)}`;
 
   const previewPhotos = useMemo(() => {
     if (photos.length >= 6) return photos.slice(0, 6);
     const filled = [...photos];
-    while (filled.length < 6) filled.push(photos[filled.length % Math.max(photos.length, 1)] ?? "");
+    while (filled.length < 6) {
+      filled.push(photos[filled.length % Math.max(photos.length, 1)] ?? "");
+    }
     return filled;
   }, [photos]);
 
@@ -63,9 +72,13 @@ export function VoucherStudio({ initialCode, initialVouchers, photos }: Props) {
         setMessage(data?.error ?? "შენახვა ვერ მოხერხდა");
         return null;
       }
-      setVouchers((current) => [data.voucher!, ...current.filter((item) => item.code !== data.voucher!.code)]);
-      if (data.nextCode) setCode(data.nextCode);
-      setMessage("შენახულია");
+      setVouchers((current) => [
+        data.voucher!,
+        ...current.filter((item) => item.code !== data.voucher!.code),
+      ]);
+      setCode(data.voucher.code);
+      setSavedCode(data.voucher.code);
+      setMessage("შენახულია — გააზიარე ბმული");
       return data.voucher;
     } catch {
       setMessage("შენახვა ვერ მოხერხდა");
@@ -111,6 +124,7 @@ export function VoucherStudio({ initialCode, initialVouchers, photos }: Props) {
     setIssuedOn(item.issued_on);
     setExpiresOn(item.expires_on);
     setCode(item.code);
+    setSavedCode(item.code);
     setMessage("");
   }
 
@@ -123,7 +137,7 @@ export function VoucherStudio({ initialCode, initialVouchers, photos }: Props) {
           </a>
           <h1 className="mt-3 font-serif text-2xl text-navy">სასაჩუქრე ვაუჩერი</h1>
           <p className="mt-2 max-w-md text-sm text-navy/70">
-            შეავსე სახელი და თარიღები, შეინახე კოდი, შემდეგ გადმოწერე PNG ან დაბეჭდე PDF-ად.
+            შეინახე ვაუჩერი და გააზიარე ონლაინ ბმული. მიმღები გახსნის ბარათს ტელეფონზე.
           </p>
         </div>
       </header>
@@ -188,6 +202,22 @@ export function VoucherStudio({ initialCode, initialVouchers, photos }: Props) {
             />
           </label>
           {message ? <p className="text-sm text-terracotta">{message}</p> : null}
+          {savedCode ? (
+            <div className="space-y-2 rounded-2xl border border-navy/10 bg-white/80 p-3">
+              <p className="break-all text-xs text-navy/70">{publicUrl}</p>
+              <div className="flex flex-col gap-2">
+                <CopyLinkButton url={publicUrl} />
+                <a
+                  href={voucherPath(savedCode)}
+                  className="rounded-full border border-navy/20 bg-white px-4 py-3 text-center text-sm font-medium text-navy"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  ონლაინ ვაუჩერის გახსნა
+                </a>
+              </div>
+            </div>
+          ) : null}
           <div className="flex flex-col gap-2 pt-2">
             <button
               type="submit"
@@ -235,15 +265,23 @@ export function VoucherStudio({ initialCode, initialVouchers, photos }: Props) {
           <h2 className="mb-4 text-sm tracking-wide text-navy/75">ბოლო ვაუჩერები</h2>
           <ul className="grid gap-2 sm:grid-cols-2">
             {vouchers.map((item) => (
-              <li key={item.code}>
+              <li key={item.code} className="surface flex items-center justify-between gap-3 rounded-2xl px-4 py-3">
                 <button
                   type="button"
                   onClick={() => loadVoucher(item)}
-                  className="surface w-full rounded-2xl px-4 py-3 text-left text-sm text-navy"
+                  className="min-w-0 flex-1 text-left text-sm text-navy"
                 >
                   <span className="font-medium text-terracotta">{item.code}</span>
-                  <span className="mt-1 block">{item.recipient}</span>
+                  <span className="mt-1 block truncate">{item.recipient}</span>
                 </button>
+                <a
+                  href={voucherPath(item.code)}
+                  className="shrink-0 text-xs text-navy/60 hover:text-terracotta"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  ბმული
+                </a>
               </li>
             ))}
           </ul>

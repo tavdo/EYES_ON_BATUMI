@@ -494,7 +494,8 @@ textarea.field {
     background: #fff !important;
   }
 
-  .voucher-studio {
+  .voucher-studio,
+  .voucher-page {
     padding: 0 !important;
     max-width: none !important;
   }

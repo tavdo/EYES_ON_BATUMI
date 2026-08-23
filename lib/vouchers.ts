@@ -48,6 +48,29 @@ export async function nextVoucherCode() {
   return padCode(max + 1);
 }
 
+export function voucherPath(code: string) {
+  return `/v/${encodeURIComponent(code.trim().toUpperCase())}`;
+}
+
+export function isVoucherExpired(expiresOn: string) {
+  return expiresOn < new Date().toISOString().slice(0, 10);
+}
+
+export async function getVoucherByCode(code: string) {
+  await ensureSchema();
+  const normalized = code.trim().toUpperCase();
+  if (!normalized) return null;
+  const result = await getTurso().execute({
+    sql: `SELECT code, locale, recipient, issued_on, expires_on, created_at
+          FROM vouchers
+          WHERE upper(code) = ?
+          LIMIT 1`,
+    args: [normalized],
+  });
+  const row = result.rows[0] as unknown as VoucherRow | undefined;
+  return row ? mapVoucher(row) : null;
+}
+
 export async function listVouchers(limit = 40) {
   await ensureSchema();
   const result = await getTurso().execute({
@@ -69,6 +92,7 @@ export async function createVoucher(input: {
 }) {
   await ensureSchema();
   const created_at = Date.now();
+  const code = input.code.trim().toUpperCase();
   await getTurso().execute({
     sql: `INSERT INTO vouchers (code, locale, recipient, issued_on, expires_on, created_at)
           VALUES (?, ?, ?, ?, ?, ?)
@@ -78,7 +102,7 @@ export async function createVoucher(input: {
             issued_on = excluded.issued_on,
             expires_on = excluded.expires_on`,
     args: [
-      input.code,
+      code,
       input.locale,
       input.recipient,
       input.issued_on,
@@ -88,6 +112,7 @@ export async function createVoucher(input: {
   });
   return {
     ...input,
+    code,
     created_at,
   } satisfies Voucher;
 }
