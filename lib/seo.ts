@@ -51,6 +51,12 @@ export function localBusinessJsonLd() {
     },
     description: SEO.description,
     sameAs: [INSTAGRAM_URL, TIKTOK_URL, TELEGRAM_BOT_URL],
+    knowsAbout: [
+      "street portrait",
+      "Batumi photography",
+      "ქუჩის პორტრეტი",
+      "ფოტოსესია ბათუმი",
+    ],
     makesOffer: {
       "@type": "Offer",
       name: "Street portrait photoshoot in Batumi",
@@ -58,3 +64,5 @@ export function localBusinessJsonLd() {
     },
   };
 }
+
+export const INDEXNOW_KEY = "eobindexnow7f3a9c2e1b8d4a06";

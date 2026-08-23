@@ -10,7 +10,7 @@ import { WHATSAPP_URL } from "@/lib/contact";
 import type { Dictionary, Locale } from "@/lib/i18n";
 import { getPricingLine, localizedField } from "@/lib/i18n";
 import type { Photo } from "@/lib/photos";
-import { HOW_IT_WORKS, LOCATIONS, TESTIMONIALS } from "@/lib/site-content";
+import { ABOUT, HOW_IT_WORKS, LOCATIONS, TESTIMONIALS } from "@/lib/site-content";
 import { INSTAGRAM_URL, TELEGRAM_BOT_URL, TIKTOK_URL } from "@/lib/social";
 
 type Props = {
@@ -115,6 +115,25 @@ export function HomeView({ locale, dict, photos, seasonPhotos }: Props) {
             </li>
           ))}
         </ol>
+      </section>
+
+      <section className="relative z-10 mx-auto w-full max-w-2xl px-5 pb-16 sm:px-8">
+        <div className="surface rounded-[2rem] px-6 py-8 sm:px-8">
+          <h2 className="text-center font-serif text-2xl font-semibold text-navy">
+            {localizedField(locale, {
+              ka: ABOUT.titleKa,
+              en: ABOUT.titleEn,
+              ru: ABOUT.titleRu,
+            })}
+          </h2>
+          <p className="mt-5 text-sm leading-relaxed text-navy/80">
+            {localizedField(locale, {
+              ka: ABOUT.bodyKa,
+              en: ABOUT.bodyEn,
+              ru: ABOUT.bodyRu,
+            })}
+          </p>
+        </div>
       </section>
 
       <section className="relative z-10 mx-auto w-full max-w-xl px-5 pb-16 text-center sm:px-8">

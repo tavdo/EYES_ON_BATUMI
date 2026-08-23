@@ -72,3 +72,15 @@ export const SEASON_LABELS: Record<
   winter: { ka: "ზამა", en: "Winter mood", ru: "Зимнее настроение" },
   spring: { ka: "გაზაფხული", en: "Spring streets", ru: "Весенние улицы" },
 };
+
+export const ABOUT = {
+  titleKa: "ვინ არის eyes.on.batumi",
+  titleEn: "Who is eyes.on.batumi",
+  titleRu: "Кто такой eyes.on.batumi",
+  bodyKa:
+    "eyes.on.batumi არის ქუჩის პორტრეტის სერვისი ბათუმში — არა ოპტიკის სალონი და არა სტუდია. ვხვდებით ბულვარზე, ძველ ქალაქში, პარკში ან ქუჩაზე, ვიღებთ ბუნებრივ კადრებს და ვაგზავნით პირად ბმულს ან Telegram-ს. თუ ეძებ ფოტოგრაფს ბათუმში ქუჩის პორტრეტისთვის, ეს არის eyes.on.batumi.",
+  bodyEn:
+    "eyes.on.batumi is a street portrait service in Batumi, Georgia — not an optics shop and not a studio. We meet on the boulevard, in the old town, or on the street, shoot natural frames, and send a private link or Telegram delivery. If you are looking for a street photographer in Batumi, this is eyes.on.batumi.",
+  bodyRu:
+    "eyes.on.batumi — уличный портрет в Батуми, а не оптика и не студия. Встречаемся на бульваре, в старом городе или на улице, снимаем естественные кадры и отправляем личную ссылку или Telegram. Если вы ищете уличного фотографа в Батуми — это eyes.on.batumi.",
+};
