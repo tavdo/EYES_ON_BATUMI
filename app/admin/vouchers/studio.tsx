@@ -4,12 +4,12 @@ import { useMemo, useRef, useState } from "react";
 import { CopyLinkButton } from "@/components/CopyLinkButton";
 import { VoucherCertificate } from "@/components/VoucherCertificate";
 import { VOUCHER_COPY, type VoucherLocale } from "@/lib/voucher-copy";
+import { voucherStripPhotos } from "@/lib/voucher-photos";
 import { voucherPath, type Voucher } from "@/lib/vouchers";
 
 type Props = {
   initialCode: string;
   initialVouchers: Voucher[];
-  photos: string[];
   origin: string;
 };
 
@@ -23,7 +23,7 @@ function plusYearIso() {
   return date.toISOString().slice(0, 10);
 }
 
-export function VoucherStudio({ initialCode, initialVouchers, photos, origin }: Props) {
+export function VoucherStudio({ initialCode, initialVouchers, origin }: Props) {
   const sheetRef = useRef<HTMLDivElement>(null);
   const [locale, setLocale] = useState<VoucherLocale>("ka");
   const [recipient, setRecipient] = useState("");
@@ -41,14 +41,7 @@ export function VoucherStudio({ initialCode, initialVouchers, photos, origin }: 
   const liveCode = savedCode ?? code.trim().toUpperCase();
   const publicUrl = `${origin}${voucherPath(liveCode)}`;
 
-  const previewPhotos = useMemo(() => {
-    if (photos.length >= 6) return photos.slice(0, 6);
-    const filled = [...photos];
-    while (filled.length < 6) {
-      filled.push(photos[filled.length % Math.max(photos.length, 1)] ?? "");
-    }
-    return filled;
-  }, [photos]);
+  const previewPhotos = useMemo(() => voucherStripPhotos(liveCode || code), [liveCode, code]);
 
   async function save() {
     setBusy(true);

@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { VoucherCertificate } from "@/components/VoucherCertificate";
 import { WHATSAPP_URL, whatsappUrl, PRIMARY_PHONE } from "@/lib/contact";
-import { listActivePhotos } from "@/lib/photos";
 import { siteUrl } from "@/lib/site-url";
 import { VOUCHER_COPY } from "@/lib/voucher-copy";
+import { voucherStripPhotos } from "@/lib/voucher-photos";
 import { getVoucherByCode, isVoucherExpired } from "@/lib/vouchers";
 
 export const dynamic = "force-dynamic";
@@ -12,15 +12,6 @@ export const dynamic = "force-dynamic";
 type PageProps = {
   params: Promise<{ code: string }>;
 };
-
-async function sidePhotos() {
-  try {
-    const items = await listActivePhotos();
-    return items.slice(0, 12).map((photo) => `/api/photos/${photo.id}/preview`);
-  } catch {
-    return [];
-  }
-}
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { code } = await params;
@@ -45,7 +36,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function PublicVoucherPage({ params }: PageProps) {
   const { code } = await params;
   const voucher = await getVoucherByCode(decodeURIComponent(code));
-  const photos = await sidePhotos();
+  const photos = voucherStripPhotos(voucher?.code ?? code);
   const copy = voucher ? VOUCHER_COPY[voucher.locale] : VOUCHER_COPY.ka;
   const expired = voucher ? isVoucherExpired(voucher.expires_on) : false;
   const bookMessage = voucher
