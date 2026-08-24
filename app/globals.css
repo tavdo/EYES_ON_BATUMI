@@ -310,11 +310,13 @@ textarea.field {
   }
 }
 
-body:has(.admin-shell) {
+body:has(.admin-shell),
+body:has(.qr-shell) {
   background: var(--cream);
 }
 
-body:has(.admin-shell) .scene {
+body:has(.admin-shell) .scene,
+body:has(.qr-shell) .scene {
   display: none;
 }
 

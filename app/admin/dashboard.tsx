@@ -322,6 +322,9 @@ export function AdminDashboard({
           <a href="/admin/vouchers" className="text-sm text-navy/55 transition-colors hover:text-navy">
             ვაუჩერები
           </a>
+          <a href="/qr" className="text-sm text-navy/55 transition-colors hover:text-navy">
+            QR
+          </a>
           <form action="/api/admin/logout" method="post">
             <button type="submit" className="text-sm text-navy/55 transition-colors hover:text-navy">
               გასვლა
