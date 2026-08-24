@@ -41,7 +41,10 @@ export async function GET(
 
     const headers = new Headers({
       "Content-Type": contentType,
-      "Cache-Control": "private, max-age=86400",
+      "Cache-Control":
+        photo.watermark === 1
+          ? "private, no-cache, must-revalidate"
+          : "private, max-age=86400",
       "X-Robots-Tag": "noindex, nofollow",
     });
     if (size != null) headers.set("Content-Length", String(size));
